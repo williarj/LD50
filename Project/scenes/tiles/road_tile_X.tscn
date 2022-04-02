@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://scripts/square.gd" type="Script" id=1]
 [ext_resource path="res://scripts/square_click.gd" type="Script" id=2]
 [ext_resource path="res://assets/art/road4.png" type="Texture" id=3]
 [ext_resource path="res://scripts/packetpath.gd" type="Script" id=4]
+[ext_resource path="res://scripts/pathgroup.gd" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 25, 25 )
@@ -55,6 +56,7 @@ modulate = Color( 0.823529, 0.172549, 0.172549, 1 )
 shape = SubResource( 1 )
 
 [node name="Paths" type="Node2D" parent="."]
+script = ExtResource( 5 )
 
 [node name="Path_NS" type="Path2D" parent="Paths"]
 position = Vector2( -24, -24 )
@@ -92,6 +94,7 @@ curve = SubResource( 7 )
 script = ExtResource( 4 )
 side1 = 2
 side2 = 3
+
 [connection signal="input_event" from="Area2D" to="Area2D" method="_on_Area2D_input_event"]
 [connection signal="rotate_left" from="Area2D" to="." method="_on_Area2D_rotate_left"]
 [connection signal="rotate_right" from="Area2D" to="." method="_on_Area2D_rotate_right"]

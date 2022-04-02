@@ -21,8 +21,8 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if (path != null):
-		self.offset = self.offset + rate * path_direction * delta
-		if (self.path_direction > 0 and self.unit_offset >= 0.90) or (self.path_direction < 0 and self.unit_offset <= 0.10) :
+		self.offset = self.offset + rate * delta
+		if self.unit_offset >= 1.0 :
 			path_complete = true
 	else:
 		position = position + direction * rate * delta
@@ -30,14 +30,10 @@ func _process(delta):
 	if (path_complete):
 		self.update_path()
 
-func set_path(path : packetpath, direction : int):
+func set_path(path : packetpath):
 	self.path = path
 	self.path_complete = false
-	self.path_direction = direction
-	if direction > 0:
-		self.unit_offset = 0
-	else:
-		self.unit_offset = 1
+	self.unit_offset = 0
 
 	if self.path != null:
 		if self.get_parent() != null:
@@ -47,10 +43,4 @@ func set_path(path : packetpath, direction : int):
 
 func update_path():
 	if self.path != null:
-		var next_path_info = path.get_next_path_info(self.unit_offset)
-		if next_path_info == null:
-			set_path(null, 1)
-		else:
-			var next_path = next_path_info[0]
-			var direction = next_path_info[1]
-			self.set_path(next_path, direction)
+		self.set_path(path.get_next_path())

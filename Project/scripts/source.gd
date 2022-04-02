@@ -13,5 +13,5 @@ func _ready():
 func on_game_tick():
 	#print("received game tick")
 	var newPacket : packet = packetScene.instance()
-	(newPacket as packet).set_path($Paths/Path2D, +1)
+	(newPacket as packet).set_path($Paths/Path2D)
 	#$Area2D/box_sprite.modulate = Color(0, 0, 1)

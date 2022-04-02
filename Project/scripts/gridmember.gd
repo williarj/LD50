@@ -55,11 +55,8 @@ func get_path_from_cardinal(cardinal):
 	var side = self.convert_cardinal_to_side(cardinal)
 	var possible_paths = []
 	for path in paths:
-		match side:
-			path.side1:
-				possible_paths.append([path, +1])
-			path.side2:
-				possible_paths.append([path, -1])
+		if side == path.side1:
+			possible_paths.append(path)
 	if len(possible_paths) == 0:
 		return null
 	else:
