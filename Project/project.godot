@@ -8,9 +8,25 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Reference",
+"class": "Globals",
+"language": "GDScript",
+"path": "res://scripts/Globals.gd"
+}, {
+"base": "Node",
+"class": "square",
+"language": "GDScript",
+"path": "res://scripts/square.gd"
+} ]
+_global_script_class_icons={
+"Globals": "",
+"square": ""
+}
+
 [application]
 
-config/name="Project"
+config/name="LD50"
 run/main_scene="res://scenes/main_scene.tscn"
 config/icon="res://icon.png"
 
