@@ -49,7 +49,7 @@ func get_shortest_path_from(cardinal : int, visited : Array = []) -> Array:
 						# path is over!
 						
 						pass
-					var neighbor : square = self.get_neighbor_by_cardinal(check_cardinal)
+					var neighbor  = self.get_neighbor_by_cardinal(check_cardinal)
 					# skip loops
 					if visited.has(neighbor):
 						continue
