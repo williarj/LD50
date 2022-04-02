@@ -3,6 +3,7 @@ class_name square
 
 var A2D : Area2D
 var next_path = 0
+var pollution = 0 setget set_pollution
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,4 +22,12 @@ func _on_Area2D_rotate_right():
 	self.direction = (self.direction + 1) % 4
 	print("%d -> %d" % [original, self.direction])
 
+func set_pollution(new_val):
+	pollution = new_val
+	$Area2D/box_sprite.modulate = Color(1.0-pollution/10.0, 1.0-pollution/10.0, 1.0-pollution/10.0)
+	
+func receive_packet(pack):
+	self.pollute()
 
+func pollute():
+	self.pollution += 1

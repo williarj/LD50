@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/art/square.png" type="Texture" id=1]
 [ext_resource path="res://scripts/square_click.gd" type="Script" id=2]
 [ext_resource path="res://scripts/source.gd" type="Script" id=3]
 [ext_resource path="res://scripts/packetpath.gd" type="Script" id=4]
+[ext_resource path="res://scripts/pathgroup.gd" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 25, 25 )
@@ -30,10 +31,12 @@ texture = ExtResource( 1 )
 shape = SubResource( 1 )
 
 [node name="Paths" type="Node2D" parent="."]
+script = ExtResource( 5 )
 
 [node name="Path2D" type="Path2D" parent="Paths"]
 curve = SubResource( 2 )
 script = ExtResource( 4 )
+side1 = 2
 
 [node name="Label" type="Label" parent="."]
 margin_left = -16.0

@@ -62,3 +62,5 @@ func get_path_from_cardinal(cardinal):
 	else:
 		return possible_paths[rng.randi_range(0, len(possible_paths)-1)]
 		
+func receive_packet(p : packet):
+	pass

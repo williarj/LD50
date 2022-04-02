@@ -12,9 +12,9 @@ var box_matrix
 var boxScene = preload("res://scenes/Box.tscn")
 var ssScene = preload("res://scenes/SourceSink.tscn")
 
-var road_scenes = [preload("res://scenes/tiles/road_tile_I.tscn"),
-				preload("res://scenes/tiles/road_tile_L.tscn"),
-				preload("res://scenes/tiles/road_tile_T.tscn")]#,
+var road_scenes = [preload("res://scenes/tiles/road_tile_I.tscn")]#,
+				#preload("res://scenes/tiles/road_tile_L.tscn"),
+				#preload("res://scenes/tiles/road_tile_T.tscn")]#,
 				#preload("res://scenes/tiles/road_tile_X.tscn")]
 
 var rng = RandomNumberGenerator.new()
@@ -79,7 +79,7 @@ func _ready():
 		source_script.set_neighbors([box_matrix[i][grid_size], null, null, null])
 	
 	#clock.connect("game_tick", box_matrix[0][1], "on_game_tick")
-	activate_source(0, 1, Globals.Resources.CIRCLE)
+	activate_source(0, 1, Globals.Resources.CIRCLE, 20)
 	activate_sink(grid_size+1, 1, Globals.Resources.CIRCLE)
 	
 		
@@ -98,7 +98,7 @@ func activate_sink(i, j, resource_type, amount = 10):
 	assert(resource_type in Globals.Resources.values(), "need valid resource type")
 	assert(i in [0, grid_size+1] or j in [0, grid_size+1], "non-source/sink index provided")
 	var box : source  = self.box_matrix[i][j]
-	box.set_as_sink(resource_type, amount)
+	box.set_as_sink(true, resource_type, amount)
 
 func pick_random_road():
 	return road_scenes[rng.randi_range(0, len(road_scenes)-1)]

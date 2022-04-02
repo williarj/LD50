@@ -14,6 +14,7 @@ enum Resources {
 	TRIANGE = 2
 }
 
+
 static func opposite_direction(cardinal : int) -> int:
 	assert(cardinal in Cardinal.values(), "wrong cardinal value")
 	

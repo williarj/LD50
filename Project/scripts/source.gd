@@ -10,7 +10,7 @@ var packetScene = preload("res://scenes/Packet.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	self.paths = [$Paths/Path2D]
+	self.paths = $Paths.get_children()
 	$Label.text = str(amount)
 
 func set_amount(new_val : int):
@@ -23,11 +23,12 @@ func on_game_tick():
 	#print("received game tick")
 	if (is_source and self.amount > 0):
 		self.set_amount(self.amount-1)
-		var newPacket : packet = packetScene.instance()
-		(newPacket as packet).set_path($Paths/Path2D)
+		var newPacket = packetScene.instance()
+		newPacket.set_path($Paths/Path2D)
+		newPacket.resource_type = self.resource
 		#$Area2D/box_sprite.modulate = Color(0, 0, 1)
 
-func recieve_packet(p : packet):
+func receive_packet(p):
 	if(!is_sink or p.resource_type != self.resource):
 		#todo: error
 		pass
@@ -39,7 +40,7 @@ func set_as_source(clock, resource, amount = 10):
 	self.resource = resource
 	self.is_source = true
 	self.is_sink = false
-	self.set_amount(self.amount)
+	self.set_amount(amount)
 	clock.connect("game_tick", self, "on_game_tick")
 	$Area2D/box_sprite.modulate = Color(0, 0, 1)
 	
@@ -52,7 +53,7 @@ func clean_up_source(clock):
 func set_as_sink(is_sink : bool, resource, amount = 10):
 	self.resource = resource
 	self.is_sink = is_sink
-	self.set_amount(self.amount)
+	self.set_amount(amount)
 	if (self.is_sink):
 		self.is_source = false
 		$Area2D/box_sprite.modulate = Color(1, 0, 0)

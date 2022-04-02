@@ -39,7 +39,6 @@ curve = SubResource( 2 )
 script = ExtResource( 4 )
 side1 = 0
 side2 = 2
-
 [connection signal="input_event" from="Area2D" to="Area2D" method="_on_Area2D_input_event"]
 [connection signal="rotate_left" from="Area2D" to="." method="_on_Area2D_rotate_left"]
 [connection signal="rotate_right" from="Area2D" to="." method="_on_Area2D_rotate_right"]

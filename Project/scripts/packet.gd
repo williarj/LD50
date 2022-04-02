@@ -6,12 +6,11 @@ class_name packet
 # var b = "text"
 var resource_type #should be Globals.Resources
 var direction = Vector2.RIGHT
-var rate : float = 20.0
+var rate : float = 60.0
 var path : packetpath = null
 
 var path_complete = true
 
-var path_direction = +1
 
 
 # Called when the node enters the scene tree for the first time.
@@ -29,7 +28,7 @@ func _process(delta):
 		position = position + direction * rate * delta
 	
 	if (path_complete):
-		self.update_path()
+		self.on_path_complete()
 
 func set_path(path : packetpath):
 	self.path = path
@@ -40,8 +39,22 @@ func set_path(path : packetpath):
 		if self.get_parent() != null:
 			self.get_parent().remove_child(self)
 		self.path.add_child(self)
+	else:
+		self.queue_free()
+		#todo: increment pollution
+		pass
 
 
-func update_path():
+func on_path_complete():
 	if self.path != null:
-		self.set_path(path.get_next_path())
+		var next_box = path.get_next_box()
+		var next_path = null
+		#if we reach the middle of a sink
+		if (next_box == null):
+			path.get_box().receive_packet(self)
+		else:
+			next_path = path.get_next_path()
+			#check if we dead-ended into a non-sink box
+			if (next_path == null):
+				next_box.receive_packet(self)
+		self.set_path(next_path)

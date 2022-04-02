@@ -10,8 +10,8 @@ var timer : Timer = Timer.new()
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	timer.connect("timeout", self, "on_timer")
-	timer.wait_time = 5
-	timer.one_shot = true
+	timer.wait_time = secspertick
+	#timer.one_shot = true
 	add_child(timer)
 	self.start()
 
