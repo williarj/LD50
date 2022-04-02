@@ -15,12 +15,30 @@ _global_script_classes=[ {
 "path": "res://scripts/Globals.gd"
 }, {
 "base": "Node",
+"class": "gameclock",
+"language": "GDScript",
+"path": "res://scripts/gameclock.gd"
+}, {
+"base": "Node",
+"class": "gridmember",
+"language": "GDScript",
+"path": "res://scripts/gridmember.gd"
+}, {
+"base": "gridmember",
+"class": "source",
+"language": "GDScript",
+"path": "res://scripts/source.gd"
+}, {
+"base": "gridmember",
 "class": "square",
 "language": "GDScript",
 "path": "res://scripts/square.gd"
 } ]
 _global_script_class_icons={
 "Globals": "",
+"gameclock": "",
+"gridmember": "",
+"source": "",
 "square": ""
 }
 

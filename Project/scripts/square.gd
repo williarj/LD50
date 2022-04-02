@@ -1,9 +1,7 @@
-extends Node
+extends gridmember
 class_name square
 
 var connections : Array = [[]]
-
-var neighbors : Array = []
 
 var A2D : Area2D
 
@@ -72,14 +70,3 @@ func is_neighbor_a_sink(cardinal : int) -> bool:
 	
 	return false
 
-func get_neighbor_by_cardinal(cardinal : int):
-	assert(cardinal in Globals.Cardinal.values(), "wrong cardinal value")
-	
-	if len(neighbors) == 4:
-		return self.neighbors[cardinal]
-	else:
-		return null
-
-func set_neighbors(neighbors : Array):
-	assert(len(neighbors) == 4, "need neighbors for exactly four direction")
-	self.neighbors = neighbors
