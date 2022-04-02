@@ -1,7 +1,6 @@
 extends gridmember
 class_name square
 
-
 var A2D : Area2D
 var next_path = 0
 
@@ -15,7 +14,6 @@ func _on_Area2D_rotate_left():
 	#self.rotation_degrees = fmod(self.A2D.rotation_degrees - 90, 360)
 	self.direction = (self.direction + 3) % 4
 	print("%d -> %d" % [original, self.direction])
-
 
 func _on_Area2D_rotate_right():
 	var original : int = self.direction

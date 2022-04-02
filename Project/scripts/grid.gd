@@ -34,13 +34,13 @@ func _ready():
 			if (i == 0 or j == 0 or i > grid_size or j > grid_size):
 				new_box = ssScene.instance()
 				if i == 0:
-					(new_box as source).output_cardinal = Globals.Cardinal.EAST
+					new_box.direction = Globals.Cardinal.EAST
 				elif j == 0:
-					(new_box as source).output_cardinal = Globals.Cardinal.SOUTH
+					new_box.direction = Globals.Cardinal.SOUTH
 				elif i == grid_size+1:
-					(new_box as source).output_cardinal = Globals.Cardinal.WEST
+					new_box.direction = Globals.Cardinal.WEST
 				elif j == grid_size+1:
-					(new_box as source).output_cardinal = Globals.Cardinal.NORTH
+					new_box.direction = Globals.Cardinal.NORTH
 			else:
 				new_box = pick_random_road().instance()
 			add_child(new_box)
