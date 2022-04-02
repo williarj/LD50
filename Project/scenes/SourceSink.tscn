@@ -34,6 +34,17 @@ shape = SubResource( 1 )
 [node name="Path2D" type="Path2D" parent="Paths"]
 curve = SubResource( 2 )
 script = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = -16.0
+margin_top = 8.0
+margin_right = 16.0
+margin_bottom = 22.0
+text = "999"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="input_event" from="Area2D" to="Area2D" method="_on_Area2D_input_event"]
 [connection signal="rotate_left" from="Area2D" to="." method="_on_Area2D_rotate_left"]
 [connection signal="rotate_right" from="Area2D" to="." method="_on_Area2D_rotate_right"]

@@ -4,6 +4,7 @@ class_name packet
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
+var resource_type #should be Globals.Resources
 var direction = Vector2.RIGHT
 var rate : float = 20.0
 var path : packetpath = null

@@ -8,6 +8,12 @@ enum Cardinal {
 	WEST  = 3
 }
 
+enum Resources {
+	CIRCLE = 0,
+	SQUARE = 1,
+	TRIANGE = 2
+}
+
 static func opposite_direction(cardinal : int) -> int:
 	assert(cardinal in Cardinal.values(), "wrong cardinal value")
 	
