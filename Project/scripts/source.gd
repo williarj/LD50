@@ -24,7 +24,7 @@ func on_game_tick():
 	if (is_source and self.amount > 0):
 		self.set_amount(self.amount-1)
 		var newPacket : packet = packetScene.instance()
-		(newPacket as packet).set_path($Paths/Path2D, +1)
+		(newPacket as packet).set_path($Paths/Path2D)
 		#$Area2D/box_sprite.modulate = Color(0, 0, 1)
 
 func recieve_packet(p : packet):
