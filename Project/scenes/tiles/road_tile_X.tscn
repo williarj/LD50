@@ -1,0 +1,97 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://scripts/square.gd" type="Script" id=1]
+[ext_resource path="res://scripts/square_click.gd" type="Script" id=2]
+[ext_resource path="res://assets/art/road4.png" type="Texture" id=3]
+[ext_resource path="res://scripts/packetpath.gd" type="Script" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 25, 25 )
+
+[sub_resource type="Curve2D" id=2]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 24, 48 )
+}
+
+[sub_resource type="Curve2D" id=3]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -24, 0, 0, 0, 0, 0, 24, 0 )
+}
+
+[sub_resource type="Curve2D" id=4]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 0, -24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0 )
+}
+
+[sub_resource type="Curve2D" id=5]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 0, -24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -24, 0 )
+}
+
+[sub_resource type="Curve2D" id=6]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24 )
+}
+
+[sub_resource type="Curve2D" id=7]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -24, 0 )
+}
+
+[node name="Box" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Area2D" type="Area2D" parent="."]
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="box_sprite" type="Sprite" parent="Area2D"]
+texture = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+modulate = Color( 0.823529, 0.172549, 0.172549, 1 )
+shape = SubResource( 1 )
+
+[node name="Paths" type="Node2D" parent="."]
+
+[node name="Path_NS" type="Path2D" parent="Paths"]
+position = Vector2( -24, -24 )
+curve = SubResource( 2 )
+script = ExtResource( 4 )
+side1 = 0
+side2 = 2
+
+[node name="Path_EW" type="Path2D" parent="Paths"]
+curve = SubResource( 3 )
+script = ExtResource( 4 )
+side1 = 1
+side2 = 3
+
+[node name="Path_NE" type="Path2D" parent="Paths"]
+curve = SubResource( 4 )
+script = ExtResource( 4 )
+side1 = 0
+side2 = 1
+
+[node name="Path_NW" type="Path2D" parent="Paths"]
+curve = SubResource( 5 )
+script = ExtResource( 4 )
+side1 = 0
+side2 = 3
+
+[node name="Path_ES" type="Path2D" parent="Paths"]
+curve = SubResource( 6 )
+script = ExtResource( 4 )
+side1 = 1
+side2 = 2
+
+[node name="Path_SW" type="Path2D" parent="Paths"]
+curve = SubResource( 7 )
+script = ExtResource( 4 )
+side1 = 2
+side2 = 3
+[connection signal="input_event" from="Area2D" to="Area2D" method="_on_Area2D_input_event"]
+[connection signal="rotate_left" from="Area2D" to="." method="_on_Area2D_rotate_left"]
+[connection signal="rotate_right" from="Area2D" to="." method="_on_Area2D_rotate_right"]

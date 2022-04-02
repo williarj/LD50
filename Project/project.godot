@@ -19,10 +19,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/gameclock.gd"
 }, {
-"base": "Node",
+"base": "Node2D",
 "class": "gridmember",
 "language": "GDScript",
 "path": "res://scripts/gridmember.gd"
+}, {
+"base": "PathFollow2D",
+"class": "packet",
+"language": "GDScript",
+"path": "res://scripts/packet.gd"
+}, {
+"base": "Path2D",
+"class": "packetpath",
+"language": "GDScript",
+"path": "res://scripts/packetpath.gd"
 }, {
 "base": "gridmember",
 "class": "source",
@@ -38,6 +48,8 @@ _global_script_class_icons={
 "Globals": "",
 "gameclock": "",
 "gridmember": "",
+"packet": "",
+"packetpath": "",
 "source": "",
 "square": ""
 }

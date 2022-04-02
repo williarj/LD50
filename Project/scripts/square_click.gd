@@ -32,3 +32,4 @@ func right_rotate():
 func left_rotate():
 	print("ROTATE LEFT")
 	emit_signal("rotate_left")
+	
