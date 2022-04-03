@@ -1,0 +1,99 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/art/background.png" type="Texture" id=1]
+[ext_resource path="res://scenes/settings_node.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/splash.gd" type="Script" id=4]
+[ext_resource path="res://assets/sound/mountain-trials.ogg" type="AudioStream" id=5]
+
+[node name="Root" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 512, 300 )
+texture = ExtResource( 1 )
+
+[node name="credits_button" type="Button" parent="."]
+margin_left = 376.0
+margin_top = 480.0
+margin_right = 433.0
+margin_bottom = 500.0
+text = "Credits"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="random_map_button" type="Button" parent="."]
+margin_left = 464.0
+margin_top = 416.0
+margin_right = 589.0
+margin_bottom = 436.0
+text = "Play Random Map"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="set_map_button" type="Button" parent="."]
+margin_left = 344.0
+margin_top = 416.0
+margin_right = 437.0
+margin_bottom = 436.0
+text = "Play Set Map"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="scores_button" type="Button" parent="."]
+margin_left = 480.0
+margin_top = 480.0
+margin_right = 534.0
+margin_bottom = 500.0
+text = "Scores"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="settings_node" parent="." instance=ExtResource( 2 )]
+position = Vector2( 888, 8 )
+
+[node name="music" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 5 )
+autoplay = true
+bus = "music"
+
+[node name="credits_panel" type="Panel" parent="."]
+visible = false
+margin_left = 160.0
+margin_top = 112.0
+margin_right = 768.0
+margin_bottom = 368.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="credits_panel"]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 576.0
+margin_bottom = 200.0
+text = "Made by jagapher and fabbyrob for LD50, April 2022. 
+
+sounds generated with: https://www.bfxr.net/
+
+Contains music ©2020 Joshua McLean (https://joshua-mclean.itch.io)
+Licensed under Creative Commons Attribution 4.0 International
+https://retroindiejosh.itch.io/free-music-pack-5 \"mountain trails\""
+
+[node name="close_credits_button" type="Button" parent="credits_panel"]
+margin_left = 272.0
+margin_top = 216.0
+margin_right = 323.0
+margin_bottom = 236.0
+text = "Close "
+[connection signal="button_up" from="credits_button" to="." method="_on_credits_button_button_up"]
+[connection signal="button_up" from="random_map_button" to="." method="_on_random_map_button_button_up"]
+[connection signal="button_up" from="set_map_button" to="." method="_on_set_map_button_button_up"]
+[connection signal="button_up" from="scores_button" to="." method="_on_scores_button_button_up"]
+[connection signal="close" from="settings_node" to="." method="_on_settings_node_close"]
+[connection signal="lower_music" from="settings_node" to="." method="_on_settings_node_lower_music"]
+[connection signal="mute_sfx" from="settings_node" to="." method="_on_settings_node_mute_sfx"]
+[connection signal="button_up" from="credits_panel/close_credits_button" to="." method="_on_close_credits_button_button_up"]

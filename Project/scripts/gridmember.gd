@@ -93,3 +93,6 @@ func packet_entered(p : packet):
 
 func packet_exited(p : packet):
 	pass
+	
+func connect_to_sound(sound):
+	pass

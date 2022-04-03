@@ -1,10 +1,22 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://scenes/grid.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/art/background.png" type="Texture" id=2]
 [ext_resource path="res://scripts/gameclock.gd" type="Script" id=3]
 [ext_resource path="res://fonts/arial.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://fonts/arialbd.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://scenes/sound_manager.gd" type="Script" id=6]
+[ext_resource path="res://assets/sound/mountain-trials.ogg" type="AudioStream" id=7]
+[ext_resource path="res://assets/sound/sink_spawn.wav" type="AudioStream" id=8]
+[ext_resource path="res://assets/sound/source_depleted.wav" type="AudioStream" id=9]
+[ext_resource path="res://assets/sound/rotate_right.wav" type="AudioStream" id=10]
+[ext_resource path="res://assets/sound/bad_delivery.wav" type="AudioStream" id=11]
+[ext_resource path="res://assets/sound/rotate_left.wav" type="AudioStream" id=12]
+[ext_resource path="res://assets/sound/spawn_resource.wav" type="AudioStream" id=13]
+[ext_resource path="res://assets/sound/sink_satisfied.wav" type="AudioStream" id=14]
+[ext_resource path="res://assets/sound/good_delivery.wav" type="AudioStream" id=15]
+[ext_resource path="res://assets/sound/pollution.wav" type="AudioStream" id=16]
+[ext_resource path="res://scenes/settings_node.tscn" type="PackedScene" id=17]
 
 [sub_resource type="DynamicFont" id=1]
 size = 22
@@ -29,11 +41,49 @@ __meta__ = {
 [node name="grid" parent="." instance=ExtResource( 1 )]
 position = Vector2( 328, 184 )
 
+[node name="sound_manager" type="Node2D" parent="grid"]
+position = Vector2( -328, -184 )
+script = ExtResource( 6 )
+
+[node name="music_player" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
+stream = ExtResource( 7 )
+autoplay = true
+
+[node name="correct_delivery_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
+stream = ExtResource( 15 )
+
+[node name="bad_delivery_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
+stream = ExtResource( 11 )
+
+[node name="source_depleted_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
+stream = ExtResource( 9 )
+
+[node name="sink_satisfied_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
+stream = ExtResource( 14 )
+
+[node name="spawn_source_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
+stream = ExtResource( 13 )
+
+[node name="spawn_sink_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
+stream = ExtResource( 8 )
+
+[node name="spawn_resource_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
+stream = ExtResource( 13 )
+
+[node name="pollution_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
+stream = ExtResource( 16 )
+
+[node name="rotate_left_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
+stream = ExtResource( 12 )
+
+[node name="rotate_right_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
+stream = ExtResource( 10 )
+
 [node name="score_num" type="Label" parent="."]
-margin_left = 16.0
-margin_top = 8.0
-margin_right = 56.0
-margin_bottom = 24.0
+margin_left = 24.0
+margin_top = 56.0
+margin_right = 64.0
+margin_bottom = 72.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "9999"
 
@@ -70,19 +120,29 @@ text = "OK"
 position = Vector2( 821, 0 )
 
 [node name="text" type="Label" parent="pause_time"]
-margin_top = 4.0
-margin_right = 115.0
-margin_bottom = 29.0
+margin_left = -5.0
+margin_top = 44.0
+margin_right = 110.0
+margin_bottom = 69.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 1 )
 text = "Pause time:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="value" type="Label" parent="pause_time"]
-margin_left = 118.0
-margin_right = 199.0
-margin_bottom = 36.0
+margin_left = 113.0
+margin_top = 40.0
+margin_right = 194.0
+margin_bottom = 76.0
 custom_colors/font_color = Color( 0.105882, 0.027451, 0.780392, 1 )
 custom_fonts/font = SubResource( 2 )
 text = "15.00"
 
-[connection signal="no_boxes_available" from="grid" to="game_over" method="_on_grid_no_boxes_available"]
+[node name="settings_node" parent="." instance=ExtResource( 17 )]
+position = Vector2( 888, 8 )
+
+[connection signal="close" from="settings_node" to="." method="_on_settings_node_close"]
+[connection signal="lower_music" from="settings_node" to="grid/sound_manager" method="_on_settings_node_lower_music"]
+[connection signal="mute_sfx" from="settings_node" to="grid/sound_manager" method="_on_settings_node_mute_sfx"]

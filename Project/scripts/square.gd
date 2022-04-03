@@ -7,6 +7,10 @@ var pollution : float = 0.0 setget set_pollution
 
 var spread = 0.5
 
+signal was_polluted(box)
+signal rotated_left(box)
+signal rotated_right(box)
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.A2D = ($Area2D as Area2D)
@@ -21,7 +25,7 @@ func _on_Area2D_rotate_right():
 func set_pollution(new_val):
 	pollution = clamp(new_val, 0, 10)
 	$Area2D/box_sprite.modulate = Color(1.0-pollution/10.0, 1.0-pollution/10.0, 1.0-pollution/10.0)
-	
+
 func packet_stopped(pack):
 	match pack.resource_type:
 		Globals.Resources.TRIANGE:
@@ -41,3 +45,8 @@ func pollute():
 
 func get_class():
 	return "square"
+	
+func connect_to_sound(sound):
+	self.connect("was_polluted", sound, "on_pollution")
+	self.connect("rotated_left", sound, "on_rotate_right")
+	self.connect("rotated_right", sound, "on_rotate_left")
