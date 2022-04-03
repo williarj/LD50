@@ -114,7 +114,6 @@ func _on_SpawnTimer_timeout():
 		newPacket.resource_type = self.resource
 		newPacket.set_resource_sprite(resource_to_sprite_map[self.resource])
 		newPacket.rate *= self.HHH.total_speed_mult()
-		newPacket.HHH = self.HHH
 		#$Area2D/box_sprite.modulate = Color(0, 0, 1)
 
 func set_direction(new_direction):
