@@ -17,11 +17,19 @@ func _on_Area2D_rotate_right():
 	self.rotate_right()
 
 func set_pollution(new_val):
-	pollution = new_val
+	pollution = clamp(new_val, 0, 10)
 	$Area2D/box_sprite.modulate = Color(1.0-pollution/10.0, 1.0-pollution/10.0, 1.0-pollution/10.0)
 	
-func receive_packet(pack):
-	self.pollute()
+func packet_stopped(pack):
+	match pack.resource_type:
+		Globals.Resources.TRIANGE:
+			self.pollution -= 1
+		_:
+			self.pollution += 1
+
+func packet_entered(pack):
+	if pack.resource_type == Globals.Resources.TRIANGE:
+		self.pollution -= 1
 
 func pollute():
 	self.pollution += 1

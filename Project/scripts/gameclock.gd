@@ -62,6 +62,12 @@ func _ready():
 	start_source_timer()
 	start_sink_timer()
 	start_hectic_timer()
+	
+	#center window for sanity
+	var screen_size = OS.get_screen_size()
+	var window_size = OS.get_window_size()
+
+	OS.set_window_position(screen_size*0.5 - window_size*0.5)
 
 func _process(delta):
 	if Input.is_key_pressed(KEY_SPACE) and pausetime > 0.0:
@@ -113,6 +119,7 @@ func _on_grid_source_spawned(spawned):
 	spawned.connect("source_depleted", self, "on_source_depleted")
 
 func on_sink_resource_delivered(sink, type_delivered):
+	self.pausetime += 0.05
 	#increase points
 	self.score += 1
 	pass
@@ -123,6 +130,7 @@ func on_sink_resource_misdelivered(sink, type_delivered, type_wanted):
 	pass
 
 func on_sink_satisfied(sink):
+	self.pausetime += 1
 	#extra points?
 	self.score += 10
 	sink.disconnect("resource_delivered", self, "on_sink_resource_delivered")
