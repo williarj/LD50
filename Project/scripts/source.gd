@@ -19,7 +19,6 @@ var packetScene = preload("res://scenes/Packet.tscn")
 var source_color = Color.darkseagreen
 var sink_color = Color.bisque
 
-
 var resource_to_sprite_map = {
 	Globals.Resources.CIRCLE : load("res://assets/art/source2.png"),
 	Globals.Resources.SQUARE : load("res://assets/art/source1.png"),
@@ -121,3 +120,5 @@ func set_direction(new_direction):
 	self.rotation_degrees = fmod(new_direction * 90, 360)
 	$LabelNode.rotation_degrees = fmod(-1*new_direction * 90, 360)
 
+func get_class():
+	return "source"

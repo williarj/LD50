@@ -3,7 +3,9 @@ class_name square
 
 var A2D : Area2D
 var next_path = 0
-var pollution = 0 setget set_pollution
+var pollution : float = 0.0 setget set_pollution
+
+var spread = 0.5
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -25,11 +27,17 @@ func packet_stopped(pack):
 		Globals.Resources.TRIANGE:
 			self.pollution -= 1
 		_:
-			self.pollution += 1
+			self.pollute()
 
 func packet_entered(pack):
 	if pack.resource_type == Globals.Resources.TRIANGE:
 		self.pollution -= 1
 
 func pollute():
-	self.pollution += 1
+	self.pollution += 1.0
+	for neighbor in self.neighbors:
+		if neighbor != null and neighbor.get_class() == "square":
+			neighbor.pollution += spread
+
+func get_class():
+	return "square"

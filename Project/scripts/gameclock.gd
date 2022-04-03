@@ -20,8 +20,8 @@ var gamegrid : grid
 var pausetime : float = 15.0 setget set_pausetime
 var userpaused : bool = false setget set_userpaused
 
-var initial_spawn_lags = [0,2,2,2]
-var spawn_lag = 1
+var initial_spawn_lags = [4,3]
+var spawn_lag = 2
 var rng = RandomNumberGenerator.new()
 
 # Called when the node enters the scene tree for the first time.
@@ -48,6 +48,7 @@ func _ready():
 	
 	#timer.one_shot = true
 	self.gamegrid = $grid
+	self.gamegrid.spawn_random()
 	self.HHH = self.gamegrid.HHH
 	
 	start_spawn_timer()
