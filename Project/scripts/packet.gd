@@ -55,10 +55,12 @@ func on_path_complete():
 		var next_path = null
 		#if we reach the middle of a sink
 		if (next_box == null):
-			path.get_box().receive_packet(self)
+			path.get_box().packet_stopped(self)
 		else:
 			next_path = path.get_next_path()
 			#check if we dead-ended into a non-sink box
 			if (next_path == null):
-				next_box.receive_packet(self)
+				next_box.packet_stopped(self)
+			else:
+				next_box.packet_entered(self)
 		self.set_path(next_path)

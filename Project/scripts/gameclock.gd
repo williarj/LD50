@@ -5,12 +5,12 @@ signal game_tick
 
 var HHH : hectic = hectic.new()
 var seconds_per_hectic
-var hectic_delay = 20
-var secs_per_hectic = 10
+var hectic_delay = 10
+var secs_per_hectic = 5
 var hectic_timer = Timer.new()
 var panic_timer = Timer.new()
 
-var source_timer : Timer = Timer.new()
+var spawn_timer : Timer = Timer.new()
 var sink_timer : Timer = Timer.new()
 
 var score : int = 0 setget set_score
@@ -20,23 +20,19 @@ var gamegrid : grid
 var pausetime : float = 15.0 setget set_pausetime
 var userpaused : bool = false setget set_userpaused
 
-var source_lag_times = [1,1,2,2,5]
-var source_lag_after = 5
-var sink_lag_times = [1,1,2,2,2,2]
-var sink_lag_after = 7
+var initial_spawn_lags = [0,2,2,2]
+var spawn_lag = 1
 var rng = RandomNumberGenerator.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	rng.randomize()
+	#global randomize
+	randomize()
 	
-	source_timer.connect("timeout", self, "on_source_timer")
-	source_timer.one_shot = true
-	add_child(source_timer)
-	
-	sink_timer.connect("timeout", self, "on_sink_timer")
-	sink_timer.one_shot = true
-	add_child(sink_timer)
+	spawn_timer.connect("timeout", self, "on_spawn_timer")
+	spawn_timer.one_shot = true
+	add_child(spawn_timer)
 	
 	hectic_timer.connect("timeout", self, "on_hectic_timeout")
 	add_child(hectic_timer)
@@ -46,20 +42,22 @@ func _ready():
 	add_child(panic_timer)
 	
 	#timer groups
-	source_timer.add_to_group("pauseable_timers",true)
-	sink_timer.add_to_group("pauseable_timers",true)
+	spawn_timer.add_to_group("pauseable_timers",true)
 	hectic_timer.add_to_group("pauseable_timers",true)
 	panic_timer.add_to_group("pauseable_timers",true)
 	
 	#timer.one_shot = true
 	self.gamegrid = $grid
-	self.gamegrid.spawn_random_source()
-	self.gamegrid.spawn_random_sink()
 	self.HHH = self.gamegrid.HHH
 	
-	start_source_timer()
-	start_sink_timer()
+	start_spawn_timer()
 	start_hectic_timer()
+	
+	#center window for sanity
+	var screen_size = OS.get_screen_size()
+	var window_size = OS.get_window_size()
+
+	OS.set_window_position(screen_size*0.5 - window_size*0.5)
 
 func _process(delta):
 	if Input.is_key_pressed(KEY_SPACE) and pausetime > 0.0:
@@ -68,39 +66,23 @@ func _process(delta):
 	else:
 		self.userpaused = false
 
-func start_source_timer():
+func start_spawn_timer():
 	var wait_time 
-	if (len(source_lag_times) > 0):
-		wait_time = source_lag_times.pop_front()
+	if (len(initial_spawn_lags) > 0):
+		wait_time = initial_spawn_lags.pop_front()
 	else:
-		wait_time = max(5.0, rng.randfn(source_lag_after, source_lag_after*0.2))
-	source_timer.wait_time = wait_time
-	source_timer.start()
-	
-
-func start_sink_timer():
-	var wait_time 
-	if (len(sink_lag_times) > 0):
-		wait_time = sink_lag_times.pop_front()
-	else:
-		wait_time = max(5.0, rng.randfn(sink_lag_after, sink_lag_after*0.2))
-	sink_timer.wait_time = wait_time
-	sink_timer.start()
+		wait_time = spawn_lag
+	spawn_timer.wait_time = wait_time
+	spawn_timer.start()
 
 func start_hectic_timer():
 	hectic_timer.wait_time = self.hectic_delay
 	hectic_timer.start()
 
-func on_source_timer():
+func on_spawn_timer():
 	#print("NEW SOURCE!")
-	self.gamegrid.spawn_random_source()
-	self.start_source_timer()
-	
-func on_sink_timer():
-	#print("NEW SINK!")
-	self.gamegrid.spawn_random_sink()
-	self.start_sink_timer()
-
+	self.gamegrid.spawn_random()
+	self.start_spawn_timer()
 
 func _on_grid_sink_spawned(spawned):
 	spawned.connect("resource_delivered", self, "on_sink_resource_delivered")
@@ -111,6 +93,7 @@ func _on_grid_source_spawned(spawned):
 	spawned.connect("source_depleted", self, "on_source_depleted")
 
 func on_sink_resource_delivered(sink, type_delivered):
+	self.pausetime += 0.05
 	#increase points
 	self.score += 1
 	pass
@@ -121,6 +104,7 @@ func on_sink_resource_misdelivered(sink, type_delivered, type_wanted):
 	pass
 
 func on_sink_satisfied(sink):
+	self.pausetime += 1
 	#extra points?
 	self.score += 10
 	sink.disconnect("resource_delivered", self, "on_sink_resource_delivered")
@@ -137,9 +121,9 @@ func set_score(new_val):
 func on_hectic_timeout():
 	HHH.hectic_level += 1
 	var level = HHH.hectic_level
-	if rng.randf() < multiply_prob(0.075, level):
+	if rng.randf() < multiply_prob(0.2, level):
 		self.gamegrid.randomly_rotate(rng.randi_range(level, level*2))
-	if rng.randf() < multiply_prob(0.075, level):
+	if rng.randf() < multiply_prob(0.1, level):
 		self.panic_mode(rng.randi_range(level, level*2))
 	if rng.randf() < multiply_prob(0.2, level):
 		self.HHH.perm_speed_mult *= (1.0 + rng.randf_range(0.05, 0.15))

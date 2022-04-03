@@ -184,23 +184,29 @@ func pick_random_road():
 	var index = self.sample_with_weights(rand_road_weights, weight_sum)
 	return road_scenes[index]
 
-func spawn_random_source():
+func spawn_road_by_index(index):
+	return road_scenes[index]
+
+func spawn_random_source(res):
 	var random_border = choose_random_empty_border()
 	if (random_border == null):
 		return false
-	activate_source(random_border, choose_random_resource(), 20)
+	activate_source(random_border, res, 20)
 	#todo change resources
 	emit_signal("source_spawned", random_border)
 	return true
 
-func spawn_road_by_index(index):
-	return road_scenes[index]
+func spawn_random():
+	var res = choose_random_resource()
+	var spawned = spawn_random_sink(res)
+	spawn_random_source(res)
+	return spawned
 
-func spawn_random_sink():
+func spawn_random_sink(res):
 	var random_border = choose_random_empty_border()
 	if (random_border == null):
 		return false
-	activate_sink(random_border, choose_random_resource())
+	activate_sink(random_border, res)
 	#todo change resources
 	emit_signal("sink_spawned", random_border)
 	return true
@@ -251,7 +257,15 @@ func sample_with_weights(arr, sum):
 #func _process(delta):
 #	pass
 func randomly_rotate(n_boxes):
-	pass
+	var boxes = range(0, grid_size*grid_size)
+	boxes.shuffle()
+	boxes = boxes.slice(0, n_boxes-1)
+	for k in boxes:
+		var i = int(float(k) / grid_size)
+		var j = k % grid_size
+		var n_rots = 1 + (randi() % 3)
+		if randf() < 0.5:
+			box_matrix[1+i][1+j].rotate_left(n_rots)
+		else:
+			box_matrix[1+i][1+j].rotate_right(n_rots)
 
-func double_speed(seconds):
-	pass

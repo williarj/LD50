@@ -51,7 +51,7 @@ func set_amount(new_val : int):
 		elif self.is_sink:
 			self.clean_up_sink()
 
-func receive_packet(p):
+func packet_stopped(p):
 	if self.is_sink:
 		if p.resource_type != self.resource:
 			emit_signal("resource_misdelivered", self, self.resource, p.resource_type)

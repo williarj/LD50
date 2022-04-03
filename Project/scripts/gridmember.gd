@@ -7,7 +7,10 @@ var parent_grid
 var paths = []
 var rng = RandomNumberGenerator.new()
 
+var tween : Tween = Tween.new()
+
 func _ready():
+	add_child(tween)
 	rng.randomize()
 
 var direction : int = 0 setget set_direction
@@ -24,9 +27,21 @@ func set_neighbors(neighbors : Array):
 	assert(len(neighbors) == 4, "need neighbors for exactly four direction")
 	self.neighbors = neighbors
 
+#instant change in direction
 func set_direction(new_direction):
-	direction = new_direction
+	direction = new_direction % 4
 	self.rotation_degrees = fmod(new_direction * 90, 360)
+
+func rotate_right(n=1):
+	var old_direction = direction
+	var new_direction = (old_direction + n) % 4
+	direction = (new_direction + 4) % 4 #force positive
+	
+	tween.interpolate_property(self, "rotation_degrees", old_direction * 90, new_direction * 90, 0.1)
+	tween.start()
+
+func rotate_left(n=1):
+	rotate_right(-n)
 
 func convert_side_to_cardinal(side : int) -> int:
 	assert(side in Globals.Cardinal.values(), "wrong side value")
@@ -62,7 +77,13 @@ func get_path_from_cardinal(cardinal):
 	else:
 		return possible_paths[rng.randi_range(0, len(possible_paths)-1)]
 		
-func receive_packet(p : packet):
+func packet_stopped(p : packet):
+	pass
+
+func packet_entered(p : packet):
+	pass
+
+func packet_exited(p : packet):
 	pass
 	
 func connect_to_sound(sound):

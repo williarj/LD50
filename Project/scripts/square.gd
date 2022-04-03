@@ -15,26 +15,25 @@ func _ready():
 	self.paths = $Paths.get_children()
 
 func _on_Area2D_rotate_left():
-	var original : int = self.direction
-	#self.rotation_degrees = fmod(self.A2D.rotation_degrees - 90, 360)
-	self.direction = (self.direction + 3) % 4
-	print("%d -> %d" % [original, self.direction])
-	emit_signal("rotated_left", self)
+	self.rotate_left()
 
 func _on_Area2D_rotate_right():
-	var original : int = self.direction
-	#self.rotation_degrees = fmod(self.A2D.rotation_degrees + 90, 360)
-	self.direction = (self.direction + 1) % 4
-	print("%d -> %d" % [original, self.direction])
-	emit_signal("rotated_right", self)
+	self.rotate_right()
 
 func set_pollution(new_val):
-	pollution = new_val
+	pollution = clamp(new_val, 0, 10)
 	$Area2D/box_sprite.modulate = Color(1.0-pollution/10.0, 1.0-pollution/10.0, 1.0-pollution/10.0)
-	
-func receive_packet(pack):
-	self.pollute()
-	emit_signal("was_polluted", self)
+
+func packet_stopped(pack):
+	match pack.resource_type:
+		Globals.Resources.TRIANGE:
+			self.pollution -= 1
+		_:
+			self.pollution += 1
+
+func packet_entered(pack):
+	if pack.resource_type == Globals.Resources.TRIANGE:
+		self.pollution -= 1
 
 func pollute():
 	self.pollution += 1
