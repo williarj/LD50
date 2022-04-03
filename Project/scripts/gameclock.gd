@@ -58,7 +58,8 @@ func _ready():
 	
 	#timer.one_shot = true
 	self.gamegrid = $grid
-	self.gamegrid.spawn_by_resource(Globals.Resources.CIRCLE)
+	self.gamegrid.spawn_source_at(4, 0, Globals.Resources.CIRCLE)
+	self.gamegrid.spawn_sink_at(6, 2, Globals.Resources.CIRCLE)
 	
 	if settings_singleton.tutorial_on:
 		$tutorial/SourceDialog.show()

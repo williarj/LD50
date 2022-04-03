@@ -39,7 +39,7 @@ script = ExtResource( 4 )
 [node name="sound_manager" type="Node2D" parent="."]
 script = ExtResource( 12 )
 
-[node name="music_player" type="AudioStreamPlayer2D" parent="sound_manager"]
+[node name="music_player" type="AudioStreamPlayer" parent="sound_manager"]
 stream = ExtResource( 5 )
 autoplay = true
 bus = "music"

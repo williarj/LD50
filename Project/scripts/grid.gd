@@ -232,6 +232,16 @@ func spawn_random():
 	var res = choose_random_resource()
 	return spawn_by_resource(res)
 
+func spawn_source_at(i, j, res):
+	activate_source(box_matrix[i][j], res, 20)
+	emit_signal("source_spawned", box_matrix[i][j])
+	return true
+
+func spawn_sink_at(i, j, res):
+	activate_sink(box_matrix[i][j], res, 10)
+	emit_signal("sink_spawned", box_matrix[i][j])
+	return true
+
 func spawn_by_resource(res):
 	var spawned = spawn_random_sink(res)
 	spawn_random_source(res)

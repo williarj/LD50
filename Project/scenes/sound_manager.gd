@@ -11,7 +11,7 @@ var settings_singleton : settings_singleton
 func _ready():
 	settings_singleton = get_node("/root/SettingsSingleton")
 	#copy the music settings from the singleton
-	_on_settings_node_lower_music()
+	set_music_level()
 	pass # Replace with function body.
 
 
@@ -59,10 +59,7 @@ func on_rotate_right(box):
 	$rotate_right_sound.play()
 	pass
 
-
-func _on_settings_node_lower_music():
-	print("music change")
-	settings_singleton.music_level = (settings_singleton.music_level - 1 + 5) % 5
+func set_music_level():
 	if settings_singleton.music_level == 0:
 		$music_player.playing = false
 	elif settings_singleton.music_level == 4:
@@ -70,6 +67,10 @@ func _on_settings_node_lower_music():
 	var music_bus = AudioServer.get_bus_index("music")
 	AudioServer.set_bus_volume_db(music_bus, -(10*(4-settings_singleton.music_level)))
 
+func _on_settings_node_lower_music():
+	print("music change")
+	settings_singleton.music_level = (settings_singleton.music_level - 1 + 5) % 5
+	set_music_level()
 
 func _on_settings_node_mute_sfx():
 	settings_singleton.sfx_on = !settings_singleton.sfx_on
