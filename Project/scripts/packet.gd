@@ -11,6 +11,8 @@ var path : packetpath = null
 
 var path_complete = true
 
+var HHH : hectic
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,6 +23,8 @@ func set_resource_sprite(new_sprite):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if(self.HHH.is_paused):
+		return
 	if (path != null):
 		self.offset = self.offset + rate * delta
 		if self.unit_offset >= 1.0 :

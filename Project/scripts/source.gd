@@ -34,6 +34,7 @@ func set_resource(new_val):
 func _ready():
 	self.paths = $Paths.get_children()
 	$SpawnTimer.wait_time = 1.0 / spawn_rate
+	$SpawnTimer.add_to_group("pauseable_timers", true)
 	#$Label_node/Label.text = str(amount)
 
 func set_amount(new_val : int):
@@ -113,6 +114,7 @@ func _on_SpawnTimer_timeout():
 		newPacket.resource_type = self.resource
 		newPacket.set_resource_sprite(resource_to_sprite_map[self.resource])
 		newPacket.rate *= self.HHH.total_speed_mult()
+		newPacket.HHH = self.HHH
 		#$Area2D/box_sprite.modulate = Color(0, 0, 1)
 
 func set_direction(new_direction):
