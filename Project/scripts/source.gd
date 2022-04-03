@@ -52,12 +52,19 @@ func set_amount(new_val : int):
 
 func packet_stopped(p):
 	if self.is_sink:
-		if p.resource_type != self.resource:
-			emit_signal("resource_misdelivered", self, self.resource, p.resource_type)
-		else:
+		if p.resource_type == Globals.Resources.SQUARE:
+			self.set_amount(self.amount-1)
+			emit_signal("resource_delivered", self, p.resource_type)
+			if self.resource == Globals.Resources.SQUARE:
+				self.set_amount(self.amount-1)
+				emit_signal("resource_delivered", self, p.resource_type)
+			p.queue_free()
+		elif p.resource_type == self.resource:
 			self.set_amount(self.amount-1)
 			emit_signal("resource_delivered", self, p.resource_type)
 			p.queue_free() #delete the resource
+		else:
+			emit_signal("resource_misdelivered", self, self.resource, p.resource_type)
 
 func set_as_source(resource, amount = 10):
 	self.resource = resource
