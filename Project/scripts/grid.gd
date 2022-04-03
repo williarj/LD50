@@ -247,5 +247,8 @@ func randomly_rotate(n_boxes):
 		var i = int(float(k) / grid_size)
 		var j = k % grid_size
 		var n_rots = 1 + (randi() % 3)
-		box_matrix[1+i][1+j].direction += n_rots
+		if randf() < 0.5:
+			box_matrix[1+i][1+j].rotate_left(n_rots)
+		else:
+			box_matrix[1+i][1+j].rotate_right(n_rots)
 
