@@ -39,6 +39,8 @@ var rng = RandomNumberGenerator.new()
 func _ready():
 	rng.randomize()
 	
+	HHH = hectic.new()
+	
 	for w in rand_road_weights:
 		weight_sum += w
 	

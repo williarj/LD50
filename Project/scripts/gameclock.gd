@@ -46,7 +46,7 @@ func _ready():
 	self.gamegrid = $grid
 	self.gamegrid.spawn_random_source()
 	self.gamegrid.spawn_random_sink()
-	self.gamegrid.HHH = self.HHH
+	self.HHH = self.gamegrid.HHH
 	
 	start_source_timer()
 	start_sink_timer()
@@ -118,7 +118,7 @@ func set_score(new_val):
 	score = new_val
 	$score_num.text = str(score)
 
-func on_hectic_timer():
+func on_hectic_timeout():
 	HHH.hectic_level += 1
 	var level = HHH.hectic_level
 	if rng.randf() < multiply_prob(0.075, level):

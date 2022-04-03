@@ -16,6 +16,7 @@ _data = {
 }
 
 [node name="SourceRoot" type="Node2D"]
+visible = false
 script = ExtResource( 3 )
 
 [node name="Area2D" type="Area2D" parent="."]
