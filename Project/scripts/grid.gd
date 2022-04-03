@@ -240,7 +240,12 @@ func sample_with_weights(arr, sum):
 #func _process(delta):
 #	pass
 func randomly_rotate(n_boxes):
-	pass
+	var boxes = range(0, grid_size*grid_size)
+	boxes.shuffle()
+	boxes = boxes.slice(0, n_boxes-1)
+	for k in boxes:
+		var i = int(float(k) / grid_size)
+		var j = k % grid_size
+		var n_rots = 1 + (randi() % 3)
+		box_matrix[1+i][1+j].direction += n_rots
 
-func double_speed(seconds):
-	pass

@@ -5,8 +5,8 @@ signal game_tick
 
 var HHH : hectic = hectic.new()
 var seconds_per_hectic
-var hectic_delay = 20
-var secs_per_hectic = 10
+var hectic_delay = 10
+var secs_per_hectic = 5
 var hectic_timer = Timer.new()
 var panic_timer = Timer.new()
 
@@ -29,6 +29,8 @@ var rng = RandomNumberGenerator.new()
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	rng.randomize()
+	#global randomize
+	randomize()
 	
 	source_timer.connect("timeout", self, "on_source_timer")
 	source_timer.one_shot = true
@@ -137,7 +139,7 @@ func set_score(new_val):
 func on_hectic_timeout():
 	HHH.hectic_level += 1
 	var level = HHH.hectic_level
-	if rng.randf() < multiply_prob(0.075, level):
+	if rng.randf() < multiply_prob(0.5, level):
 		self.gamegrid.randomly_rotate(rng.randi_range(level, level*2))
 	if rng.randf() < multiply_prob(0.075, level):
 		self.panic_mode(rng.randi_range(level, level*2))

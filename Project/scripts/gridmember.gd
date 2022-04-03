@@ -25,7 +25,7 @@ func set_neighbors(neighbors : Array):
 	self.neighbors = neighbors
 
 func set_direction(new_direction):
-	direction = new_direction
+	direction = new_direction % 4
 	self.rotation_degrees = fmod(new_direction * 90, 360)
 
 func convert_side_to_cardinal(side : int) -> int:
