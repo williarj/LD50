@@ -18,3 +18,16 @@ __meta__ = {
 
 [node name="grid" parent="." instance=ExtResource( 1 )]
 position = Vector2( 328, 184 )
+
+[node name="score_num" type="Label" parent="."]
+margin_left = 16.0
+margin_top = 8.0
+margin_right = 56.0
+margin_bottom = 24.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "9999"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="sink_spawned" from="grid" to="." method="_on_grid_sink_spawned"]
+[connection signal="source_spawned" from="grid" to="." method="_on_grid_source_spawned"]
