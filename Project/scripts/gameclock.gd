@@ -128,6 +128,8 @@ func on_hectic_timeout():
 		self.panic_mode(rng.randi_range(level, level*2))
 	if rng.randf() < multiply_prob(0.2, level):
 		self.HHH.perm_speed_mult *= (1.0 + rng.randf_range(0.05, 0.15))
+	if rng.randf() < multiply_prob(1.0/3.0, level):
+		get_tree().call_group("tiles", "increase_pollution_mult", 0.25)
 
 func panic_mode(seconds):
 	if panic_timer.is_stopped():
