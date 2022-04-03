@@ -11,7 +11,7 @@ loop = false
 script = ExtResource( 1 )
 
 [node name="Area2D" type="Area2D" parent="."]
-scale = Vector2( 0.25, 0.25 )
+scale = Vector2( 0.4, 0.4 )
 
 [node name="packet_sprite" type="Sprite" parent="Area2D"]
 z_index = 1

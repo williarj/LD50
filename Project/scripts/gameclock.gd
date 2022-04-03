@@ -52,11 +52,11 @@ func start_sink_timer():
 	sink_timer.start()
 
 func on_source_timer():
-	print("NEW SOURCE!")
+	#print("NEW SOURCE!")
 	self.gamegrid.spawn_random_source()
 	
 func on_sink_timer():
-	print("NEW SINK!")
+	#print("NEW SINK!")
 	self.gamegrid.spawn_random_sink()
 
 func _on_grid_sink_spawned(spawned):

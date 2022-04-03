@@ -5,25 +5,40 @@ signal resource_delivered(destination, type_delivered)
 signal resource_misdelivered(destination, type_delivered, type_wanted)
 signal source_depleted(s)
 signal sink_satisfied(s)
+signal amount_changed(a)
 
-export var resource = Globals.Resources.CIRCLE 
+export var resource = Globals.Resources.CIRCLE setget set_resource
 
 var amount : int = 500 setget set_amount
-var spawn_rate : float = 3.0
+var spawn_rate : float = 1.0
 
 var is_source : bool = false
-var is_sink : bool = false
+var is_sink : bool = false setget set_is_sink
 var packetScene = preload("res://scenes/Packet.tscn")
+var source_color = Color.darkseagreen
+var sink_color = Color.bisque
+
+
+var resource_to_sprite_map = {
+	Globals.Resources.CIRCLE : load("res://assets/art/source2.png"),
+	Globals.Resources.SQUARE : load("res://assets/art/source1.png"),
+	Globals.Resources.TRIANGE : load("res://assets/art/source3.png")
+}
+
+func set_resource(new_val):
+	resource = new_val
+	$resource_sprite.texture = resource_to_sprite_map[resource]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.paths = $Paths.get_children()
 	$SpawnTimer.wait_time = 1.0 / spawn_rate
-	$Label.text = str(amount)
+	#$Label_node/Label.text = str(amount)
 
 func set_amount(new_val : int):
 	amount = new_val
-	$Label.text = str(amount)
+	emit_signal("amount_changed", amount)
+	$LabelNode/Label.text = str(amount)
 	if(new_val <= 0):
 		print("Resource exhausted/satisfied")
 		if self.is_source:
@@ -46,9 +61,11 @@ func set_as_source(resource, amount = 10):
 	self.is_sink = false
 	self.set_amount(amount)
 	#clock.connect("game_tick", self, "on_game_tick")
+	$SpawnTimer.wait_time = 1.0 / (spawn_rate / 3)
+	$SpawnTimer.one_shot = true
 	$SpawnTimer.start()
 	self.visible = true
-	$Area2D/box_sprite.modulate = Color(0, 0, 1, 1)
+	$Area2D/box_sprite.modulate = source_color
 	
 func clean_up_source():
 	self.is_source = false
@@ -69,17 +86,35 @@ func set_as_sink(is_sink : bool, resource, amount = 10):
 	if (self.is_sink):
 		self.is_source = false
 		self.visible = true
-		$Area2D/box_sprite.modulate = Color(1, 0, 0, 1)
+		$Area2D/box_sprite.modulate = sink_color
 	else:
 		self.visible = true
 		$Area2D/box_sprite.modulate = Color(0, 0, 0, 1)
 		
+func set_is_sink(new_val):
+	if (new_val != is_sink):
+		$Area2D/box_sprite.rotation_degrees += fmod(180, 360)
+	is_sink = new_val
+	
 
 func _on_SpawnTimer_timeout():
 	#print("received game tick")
+	if ($SpawnTimer.one_shot):
+		#make sure we reset the timer length after the first spawn
+		$SpawnTimer.wait_time = 1.0 / spawn_rate 
+		$SpawnTimer.one_shot = false
+		$SpawnTimer.start()
+	
 	if (is_source and self.amount > 0):
 		self.set_amount(self.amount-1)
 		var newPacket = packetScene.instance()
 		newPacket.set_path($Paths/Path2D)
 		newPacket.resource_type = self.resource
+		newPacket.set_resource_sprite(resource_to_sprite_map[self.resource])
 		#$Area2D/box_sprite.modulate = Color(0, 0, 1)
+
+func set_direction(new_direction):
+	direction = new_direction
+	self.rotation_degrees = fmod(new_direction * 90, 360)
+	$LabelNode.rotation_degrees = fmod(-1*new_direction * 90, 360)
+

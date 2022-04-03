@@ -18,13 +18,27 @@ var ssScene = preload("res://scenes/SourceSink.tscn")
 var road_scenes = [preload("res://scenes/tiles/road_tile_I.tscn"),
 				preload("res://scenes/tiles/road_tile_L.tscn"),
 				preload("res://scenes/tiles/road_tile_T.tscn"),
-				preload("res://scenes/tiles/road_tile_X.tscn")]
+				preload("res://scenes/tiles/road_tile_X.tscn"),
+				preload("res://scenes/tiles/road_tile_C.tscn"),
+				preload("res://scenes/tiles/road_tile_O.tscn")
+				]
+				
+var rand_road_weights = [10,
+					5,
+					3,
+					2,
+					2,
+					2]
+var weight_sum = 0
 
 var rng = RandomNumberGenerator.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	rng.randomize()
+	
+	for w in rand_road_weights:
+		weight_sum += w
 	
 	####Generate all the boxes in the grid
 	var box_matrix = []
@@ -97,13 +111,14 @@ func activate_sink(box, resource_type, amount = 10):
 	box.set_as_sink(true, resource_type, amount)
 
 func pick_random_road():
-	return road_scenes[rng.randi_range(0, len(road_scenes)-1)]
+	var index = self.sample_with_weights(rand_road_weights, weight_sum)
+	return road_scenes[index]
 
 func spawn_random_source():
 	var random_border = choose_random_empty_border()
 	if (random_border == null):
 		return false
-	activate_source(random_border, Globals.Resources.CIRCLE, 20)
+	activate_source(random_border, choose_random_resource(), 20)
 	#todo change resources
 	emit_signal("source_spawned", random_border)
 	return true
@@ -112,10 +127,13 @@ func spawn_random_sink():
 	var random_border = choose_random_empty_border()
 	if (random_border == null):
 		return false
-	activate_sink(random_border, Globals.Resources.CIRCLE)
+	activate_sink(random_border, choose_random_resource())
 	#todo change resources
 	emit_signal("sink_spawned", random_border)
 	return true
+
+func choose_random_resource():
+	return Globals.Resources.values()[rng.randi_range(0, len(Globals.Resources.values())-1)]
 
 func choose_random_empty_border():
 	var empty_boxes = []
@@ -143,6 +161,17 @@ func choose_random_empty_border():
 		print("NO FREE BOXES")
 		return null
 	return empty_boxes[rng.randi_range(0, len(empty_boxes)-1)]
+
+func sample_with_weights(arr, sum):
+	var p = rng.randf()
+	var cum_p = 0
+	for i in range(len(arr)-1):
+		var v = arr[i]
+		cum_p += v/float(sum)
+		if p < cum_p:
+			return i
+	return len(arr)-1
+			
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

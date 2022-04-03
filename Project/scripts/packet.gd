@@ -4,7 +4,7 @@ class_name packet
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-var resource_type #should be Globals.Resources
+var resource_type#should be Globals.Resources
 var direction = Vector2.RIGHT
 var rate : float = 60.0
 var path : packetpath = null
@@ -12,11 +12,12 @@ var path : packetpath = null
 var path_complete = true
 
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass
 
+func set_resource_sprite(new_sprite):
+	$Area2D/packet_sprite.texture = new_sprite
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
