@@ -162,6 +162,8 @@ func set_pausetime(new_value):
 	val_label.text = "%0.2f" % pausetime
 
 func set_userpaused(new_value):
-	userpaused = new_value
 	self.HHH.is_paused = new_value
-	get_tree().set_group("pauseable_timers", "paused", new_value)
+	if userpaused != new_value:
+		get_tree().set_group("pauseable_timers", "paused", new_value)
+		get_tree().set_group("packets", "paused", new_value)
+	userpaused = new_value
