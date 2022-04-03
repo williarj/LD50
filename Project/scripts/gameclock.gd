@@ -3,9 +3,11 @@ class_name gameclock
 
 signal game_tick
 
+var game_seconds = 0 setget set_game_seconds
+
 var HHH : hectic = hectic.new()
 var seconds_per_hectic
-var hectic_delay = 10
+var hectic_delay = 60
 var secs_per_hectic = 5
 var hectic_timer = Timer.new()
 var panic_timer = Timer.new()
@@ -22,7 +24,7 @@ var userpaused : bool = false setget set_userpaused
 var gamepaused : bool = false setget set_gamepaused
 var ispaused : bool = false setget set_ispaused, get_ispaused
 
-var initial_spawn_lags = [4,3]
+var initial_spawn_lags = [10,7,7,7,5]
 var spawn_lag = 2
 var rng = RandomNumberGenerator.new()
 
@@ -76,6 +78,7 @@ func _ready():
 
 func _process(delta):
 	if !gamepaused:
+		self.game_seconds += delta
 		if Input.is_key_pressed(KEY_SPACE) and pausetime > 0.0:
 			self.userpaused = true
 			self.pausetime -= delta
@@ -196,7 +199,7 @@ func _on_settings_node_close():
 
 func _on_end_button_button_up():
 	var sing = (get_node("/root/SettingsSingleton") as settings_singleton)
-	sing.add_score(self.score, $game_over/Panel/TextEdit.text)
+	sing.add_score(self.score, $game_over/Panel/TextEdit.text, $clock.text)
 	sing.save_scores()
 	_on_settings_node_close()
 
@@ -206,7 +209,7 @@ func _on_grid_all_sinks():
 	pass # Replace with function body.
 
 var first_pollution = true
-func on_polluted():
+func on_polluted(box):
 	if first_pollution and settings_singleton.tutorial_on:
 		$tutorial/PollutionDialog.show()
 		first_pollution = false
@@ -219,3 +222,9 @@ func _on_TutorialDialog_confirmed():
 			waiting_dialogs = true
 	if !waiting_dialogs:
 		self.gamepaused = false
+
+func set_game_seconds(new_val):
+	game_seconds = new_val
+	var mins = int(game_seconds/60)
+	var secs = int(game_seconds) % 60
+	$clock.text = "%2d:%02d" % [mins, secs]

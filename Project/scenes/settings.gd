@@ -11,6 +11,7 @@ signal mute_sfx()
 var music_level = 4 #4 = max, 0 = mute
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	music_level = get_node("/root/SettingsSingleton").music_level
 	pass # Replace with function body.
 
 

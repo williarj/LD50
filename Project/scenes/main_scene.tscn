@@ -49,36 +49,47 @@ script = ExtResource( 6 )
 [node name="music_player" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
 stream = ExtResource( 7 )
 autoplay = true
+bus = "music"
 
 [node name="correct_delivery_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
 stream = ExtResource( 15 )
+bus = "sfx"
 
 [node name="bad_delivery_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
 stream = ExtResource( 11 )
+bus = "sfx"
 
 [node name="source_depleted_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
 stream = ExtResource( 9 )
+bus = "sfx"
 
 [node name="sink_satisfied_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
 stream = ExtResource( 14 )
+bus = "sfx"
 
 [node name="spawn_source_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
 stream = ExtResource( 13 )
+bus = "sfx"
 
 [node name="spawn_sink_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
 stream = ExtResource( 8 )
+bus = "sfx"
 
 [node name="spawn_resource_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
 stream = ExtResource( 13 )
+bus = "sfx"
 
 [node name="pollution_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
 stream = ExtResource( 16 )
+bus = "sfx"
 
 [node name="rotate_left_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
 stream = ExtResource( 12 )
+bus = "sfx"
 
 [node name="rotate_right_sound" type="AudioStreamPlayer2D" parent="grid/sound_manager"]
 stream = ExtResource( 10 )
+bus = "sfx"
 
 [node name="score_num" type="Label" parent="."]
 margin_left = 88.0
@@ -98,6 +109,17 @@ margin_right = 77.0
 margin_bottom = 72.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "SCORE:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="clock" type="Label" parent="."]
+margin_left = 472.0
+margin_top = 24.0
+margin_right = 528.0
+margin_bottom = 38.0
+custom_colors/font_color = Color( 0.996078, 0.0666667, 0.0666667, 1 )
+text = "00:00"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -177,53 +199,15 @@ text = "15.00"
 [node name="settings_node" parent="." instance=ExtResource( 17 )]
 position = Vector2( 816, 8 )
 
-[node name="click_inst" type="Node2D" parent="."]
-
-[node name="click_arrow" type="Sprite" parent="click_inst"]
-position = Vector2( 168, 256 )
-rotation = 2.63196
-scale = Vector2( 0.672, 0.628 )
-texture = ExtResource( 18 )
-
-[node name="Label" type="Label" parent="click_inst"]
-margin_left = 32.0
-margin_top = 176.0
-margin_right = 184.0
-margin_bottom = 207.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-text = "Right click - Rotate right
-Left click - rotate left"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="pause_inst" type="Node2D" parent="."]
-
-[node name="pause_arrow" type="Sprite" parent="pause_inst"]
-position = Vector2( 960.377, 106.535 )
-rotation = 0.933751
-scale = Vector2( 0.339869, 0.311499 )
-texture = ExtResource( 18 )
-
-[node name="Label" type="Label" parent="pause_inst"]
-margin_left = 832.0
-margin_top = 128.0
-margin_right = 968.0
-margin_bottom = 168.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-text = "Space bar pauses, while you have time!"
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="tutorial" type="Node2D" parent="."]
+visible = false
 
 [node name="SourceDialog" type="AcceptDialog" parent="tutorial"]
-margin_left = 16.0
-margin_top = 112.0
-margin_right = 288.0
-margin_bottom = 221.0
+visible = true
+margin_left = 336.0
+margin_top = 136.0
+margin_right = 608.0
+margin_bottom = 245.0
 window_title = "Sources"
 dialog_text = "Inwards facing arrows are \"sources\".
 They spawn resources that must be delivered to \"sinks\" until they are exhausted."
@@ -233,6 +217,7 @@ __meta__ = {
 }
 
 [node name="SinkDialog" type="AcceptDialog" parent="tutorial"]
+visible = true
 margin_left = 736.0
 margin_top = 264.0
 margin_right = 1008.0
@@ -246,10 +231,11 @@ __meta__ = {
 }
 
 [node name="ResourceDialogue" type="AcceptDialog" parent="tutorial"]
-margin_left = 16.0
-margin_top = 256.0
-margin_right = 288.0
-margin_bottom = 399.0
+visible = true
+margin_left = 336.0
+margin_top = 280.0
+margin_right = 608.0
+margin_bottom = 423.0
 window_title = "Resources"
 dialog_text = "Resources move along the paths. At junctions they turn a random direction. You get points and pause time when they reach a matching sink.
 
@@ -260,10 +246,11 @@ __meta__ = {
 }
 
 [node name="ResourceTypesDialog" type="AcceptDialog" parent="tutorial"]
+visible = true
 margin_left = 16.0
-margin_top = 432.0
+margin_top = 400.0
 margin_right = 288.0
-margin_bottom = 592.0
+margin_bottom = 577.0
 window_title = "Resource Types"
 dialog_text = "There are several types of resources:
 
@@ -276,6 +263,7 @@ __meta__ = {
 }
 
 [node name="PollutionDialog" type="AcceptDialog" parent="tutorial"]
+visible = true
 margin_left = 736.0
 margin_top = 424.0
 margin_right = 1008.0
@@ -288,6 +276,7 @@ __meta__ = {
 }
 
 [node name="HecticDialog" type="AcceptDialog" parent="tutorial"]
+visible = true
 margin_left = 736.0
 margin_top = 112.0
 margin_right = 1008.0
@@ -295,6 +284,69 @@ margin_bottom = 232.0
 window_title = "Hectic Mode"
 dialog_text = "The game increases in difficulty over time. More sources and sinks will spawn, resources will move faster, and tiles will randomly rotate. "
 dialog_autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="instructions" type="Node2D" parent="."]
+
+[node name="click_inst" type="Node2D" parent="instructions"]
+
+[node name="click_arrow" type="Sprite" parent="instructions/click_inst"]
+position = Vector2( 168, 256 )
+rotation = 2.63196
+scale = Vector2( 0.672, 0.628 )
+texture = ExtResource( 18 )
+
+[node name="Label" type="Label" parent="instructions/click_inst"]
+margin_left = 32.0
+margin_top = 168.0
+margin_right = 184.0
+margin_bottom = 216.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Click white road tiles:
+Right click - Rotate right
+Left click - rotate left"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="pause_inst" type="Node2D" parent="instructions"]
+
+[node name="pause_arrow" type="Sprite" parent="instructions/pause_inst"]
+position = Vector2( 960.377, 106.535 )
+rotation = 0.933751
+scale = Vector2( 0.339869, 0.311499 )
+texture = ExtResource( 18 )
+
+[node name="Label" type="Label" parent="instructions/pause_inst"]
+margin_left = 832.0
+margin_top = 128.0
+margin_right = 968.0
+margin_bottom = 168.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Space bar pauses, while you have time!"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="end_inst" type="Node2D" parent="instructions"]
+
+[node name="end_arrow" type="Sprite" parent="instructions/end_inst"]
+position = Vector2( 744, 448 )
+rotation = -0.169297
+scale = Vector2( 0.630559, 0.559849 )
+texture = ExtResource( 18 )
+
+[node name="Label" type="Label" parent="instructions/end_inst"]
+margin_left = 696.0
+margin_top = 504.0
+margin_right = 832.0
+margin_bottom = 569.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "The game ends when no new sources can spawn: All out arrows."
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

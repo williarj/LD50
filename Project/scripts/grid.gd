@@ -34,13 +34,17 @@ var road_scenes = [preload("res://scenes/tiles/road_tile_I.tscn"),
 				preload("res://scenes/tiles/road_tile_O.tscn")
 				]
 				
-var rand_road_weights = [10,
+var rand_road_weights = [5,
 					5,
 					3,
-					2,
+					0.1,
 					2,
 					2]
-var weight_sum = 0
+
+var rand_resource_weights = [3,1,2]
+
+var road_weight_sum = 0
+var resource_weight_sum = 0
 
 var rng = RandomNumberGenerator.new()
 var sound_manager
@@ -55,14 +59,17 @@ func _ready():
 	sound_manager = $sound_manager as sound_manager
 	
 	for w in rand_road_weights:
-		weight_sum += w
+		road_weight_sum += w
+		
+	for w in rand_resource_weights:
+		resource_weight_sum += w
 	set_up_grid(settings_singleton.level_to_load)
 	
-func set_up_grid(file = null):
-	if file == null:
+func set_up_grid(data = null):
+	if data == null:
 		self.box_matrix = generate_random_grid()
 	else:
-		self.box_matrix = generate_csv_grid(file)
+		self.box_matrix = generate_array_grid(data)
 	
 	####Set each box's neighbors
 	#"ss cells dont need checked"
@@ -143,20 +150,15 @@ func generate_random_grid():
 			new_box.connect_to_sound(sound_manager)
 	return box_matrix
 
-func generate_csv_grid(csv_file):
-	var open_file = File.new()
-	open_file.open(csv_file, File.READ)
-	
+func generate_array_grid(arr):
 	var new_box_matrix = generate_empty_grid()
 	var i = 1
-	while !open_file.eof_reached():
-		var line = open_file.get_line()
+	for line in arr:
 		#assert(i <= grid_size, "CSV with incompatible grid size loaded")
 		if i > grid_size:
 			continue
-		var sline = line.split(",")
 		var j = 1
-		for col in sline:
+		for col in line:
 			#assert(j <= grid_size, "CSV with incompatible grid size loaded")
 			if j > grid_size:
 				continue
@@ -169,8 +171,37 @@ func generate_csv_grid(csv_file):
 			new_box.connect_to_sound(sound_manager)
 			j += 1
 		i += 1
-	open_file.close()
 	return new_box_matrix
+		
+func generate_csv_grid(csv_file):
+	var open_file = File.new()
+	if open_file.file_exists(csv_file):
+		open_file.open(csv_file, File.READ)
+		var content = open_file.get_as_text()
+		var new_box_matrix = generate_empty_grid()
+		var i = 1
+		for line in content.split("\n"):
+			#assert(i <= grid_size, "CSV with incompatible grid size loaded")
+			if i > grid_size:
+				continue
+			var sline = line.split(",")
+			var j = 1
+			for col in sline:
+				#assert(j <= grid_size, "CSV with incompatible grid size loaded")
+				if j > grid_size:
+					continue
+				var new_box = spawn_road_by_index(int(col)).instance()
+				new_box_matrix[j][i] = new_box #these indices are backwards, because of reasons
+				add_child(new_box)
+				new_box.parent_grid = self
+				new_box.set_position(Vector2(grid_border+j*box_size*(1+box_buffer), 
+											grid_border+i*box_size*(1+box_buffer)))
+				new_box.connect_to_sound(sound_manager)
+				j += 1
+			i += 1
+		open_file.close()
+		return new_box_matrix
+	return null
 	
 
 func activate_source(box, resource_type, amount = 10):
@@ -182,7 +213,7 @@ func activate_sink(box, resource_type, amount = 10):
 	box.set_as_sink(true, resource_type, amount)
 
 func pick_random_road():
-	var index = self.sample_with_weights(rand_road_weights, weight_sum)
+	var index = self.sample_with_weights(rand_road_weights, road_weight_sum)
 	return road_scenes[index]
 
 func spawn_road_by_index(index):
@@ -216,7 +247,8 @@ func spawn_random_sink(res):
 	return true
 
 func choose_random_resource():
-	return Globals.Resources.values()[rng.randi_range(0, len(Globals.Resources.values())-1)]
+	var index = self.sample_with_weights(rand_resource_weights, resource_weight_sum)
+	return Globals.Resources.values()[index]
 
 func choose_random_empty_border():
 	var empty_boxes = []

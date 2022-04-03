@@ -34,41 +34,27 @@ func _on_random_map_button_button_up():
 	get_tree().change_scene("res://scenes/main_scene.tscn")
 	pass # Replace with function body.
 
+var set_map = [[2,0,1,0,2],
+[0,0,0,4,0],
+[1,1,3,1,1],
+[0,4,0,0,0],
+[2,0,1,0,2]]
+
 
 func _on_set_map_button_button_up():
-	settings_singleton.level_to_load = "res://data/maps/map1.txt"
+	settings_singleton.level_to_load = set_map
 	get_tree().change_scene("res://scenes/main_scene.tscn")
 	pass # Replace with function body.
 
 
 func _on_scores_button_button_up():
-	var text = "TOP SCORES:\n"
+	var text = "TOP SCORES \nscore  name   time\n"
 	var scores = settings_singleton.scores_to_str()
+	scores = scores.replace(",","   ")
 	if (scores == ""):
 		scores = "no data yet..."
 	$scores_panel/RichTextLabel.text = text + scores
 	$scores_panel.visible = true
-
-
-func _on_settings_node_close():
-	pass # Replace with function body.
-
-
-func _on_settings_node_lower_music():
-	#print("music change")
-	settings_singleton.music_level = (settings_singleton.music_level - 1 + 5) % 5
-	if settings_singleton.music_level == 0:
-		$music.playing = false
-	elif settings_singleton.music_level == 4:
-		$music.playing = true
-	var music_bus = AudioServer.get_bus_index("music")
-	AudioServer.set_bus_volume_db(music_bus, -(10*(4-settings_singleton.music_level)))
-	pass # Replace with function body.
-
-
-func _on_settings_node_mute_sfx():
-	pass # Replace with function body.
-
 
 func _on_close_credits_button_button_up():
 	$credits_panel.visible = false

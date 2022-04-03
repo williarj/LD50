@@ -27,19 +27,21 @@ func load_scores():
 		var content = f.get_as_text()
 		for line in content.split("\n"):
 			var sline = line.split(",")
-			if (len(sline) > 1):
-				scores.append([sline[0], sline[1]]) #[score, name]
+			if (len(sline) > 2):
+				scores.append([int(sline[0]), sline[1], sline[2]]) #[score, name]
+			else:
+				pass
 		f.close()
 
-func add_score(score, name=""):
+func add_score(score, name="", time="00:00"):
 	name = name.replace("\n","").replace(",","")
-	scores.append([score, name])
+	scores.append([score, name, time])
 
 func scores_to_str():
 	var content = ""
 	scores.sort_custom(self, "compare_scores")
 	for data in scores:
-		content += str(data[0])+","+str(data[1])+"\n"
+		content += str(data[0])+","+str(data[1])+","+str(data[2])+"\n"
 	return content
 
 func compare_scores(a, b):

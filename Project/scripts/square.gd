@@ -40,7 +40,7 @@ func packet_entered(pack):
 		self.pollution -= 1
 
 func pollute():
-	emit_signal("was_polluted")
+	emit_signal("was_polluted", self)
 	self.pollution += (self.pollution_mult)
 	for neighbor in self.neighbors:
 		if neighbor != null and neighbor.get_class() == "square":

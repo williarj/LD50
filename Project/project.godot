@@ -81,12 +81,16 @@ _global_script_class_icons={
 [application]
 
 config/name="LD50"
-run/main_scene="res://scenes/main_scene.tscn"
+run/main_scene="res://scenes/splash.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 SettingsSingleton="*res://scripts/settings_singleton.gd"
+
+[display]
+
+window/stretch/mode="viewport"
 
 [physics]
 
