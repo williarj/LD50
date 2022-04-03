@@ -167,3 +167,8 @@ func set_userpaused(new_value):
 		get_tree().set_group("pauseable_timers", "paused", new_value)
 		get_tree().set_group("packets", "paused", new_value)
 	userpaused = new_value
+
+
+func _on_settings_node_close():
+	get_tree().change_scene("res://scenes/splash.tscn")
+	pass # Replace with function body.

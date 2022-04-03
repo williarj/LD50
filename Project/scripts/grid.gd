@@ -42,18 +42,26 @@ var rand_road_weights = [10,
 var weight_sum = 0
 
 var rng = RandomNumberGenerator.new()
+var sound_manager
+var settings_singleton : settings_singleton
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	settings_singleton = get_node("/root/SettingsSingleton")
 	rng.randomize()
 	
 	HHH = hectic.new()
+	sound_manager = $sound_manager as sound_manager
 	
 	for w in rand_road_weights:
 		weight_sum += w
+	set_up_grid(settings_singleton.level_to_load)
 	
-	#self.box_matrix = generate_random_grid()
-	self.box_matrix = generate_csv_grid("res://data/maps/map1.txt")
+func set_up_grid(file = null):
+	if file == null:
+		self.box_matrix = generate_random_grid()
+	else:
+		self.box_matrix = generate_csv_grid(file)
 	
 	####Set each box's neighbors
 	#"ss cells dont need checked"
@@ -111,6 +119,7 @@ func generate_empty_grid():
 				new_box.parent_grid = self
 				new_box.set_position(Vector2(grid_border+i*box_size*(1+box_buffer), 
 											grid_border+j*box_size*(1+box_buffer)))
+				new_box.connect_to_sound(sound_manager)
 			else:
 				new_box = null
 			box_row.append(new_box)
@@ -130,6 +139,7 @@ func generate_random_grid():
 			new_box.parent_grid = self
 			new_box.set_position(Vector2(grid_border+i*box_size*(1+box_buffer), 
 										grid_border+j*box_size*(1+box_buffer)))
+			new_box.connect_to_sound(sound_manager)
 	return box_matrix
 
 func generate_csv_grid(csv_file):
@@ -155,6 +165,7 @@ func generate_csv_grid(csv_file):
 			new_box.parent_grid = self
 			new_box.set_position(Vector2(grid_border+j*box_size*(1+box_buffer), 
 										grid_border+i*box_size*(1+box_buffer)))
+			new_box.connect_to_sound(sound_manager)
 			j += 1
 		i += 1
 	open_file.close()

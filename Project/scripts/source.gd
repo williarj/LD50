@@ -6,6 +6,9 @@ signal resource_misdelivered(destination, type_delivered, type_wanted)
 signal source_depleted(s)
 signal sink_satisfied(s)
 signal amount_changed(a)
+signal resource_spawned(type)
+signal became_source(type)
+signal became_sink(type)
 
 export var resource = Globals.Resources.CIRCLE setget set_resource
 
@@ -68,6 +71,7 @@ func set_as_source(resource, amount = 10):
 	$SpawnTimer.start()
 	self.visible = true
 	$Area2D/box_sprite.modulate = source_color
+	emit_signal("became_source", self.resource)
 	
 func clean_up_source():
 	self.is_source = false
@@ -89,9 +93,11 @@ func set_as_sink(is_sink : bool, resource, amount = 10):
 		self.is_source = false
 		self.visible = true
 		$Area2D/box_sprite.modulate = sink_color
+		emit_signal("became_sink", self.resource)
 	else:
 		self.visible = true
 		$Area2D/box_sprite.modulate = Color(0, 0, 0, 1)
+		
 		
 func set_is_sink(new_val):
 	if (new_val != is_sink):
@@ -114,6 +120,7 @@ func _on_SpawnTimer_timeout():
 		newPacket.resource_type = self.resource
 		newPacket.set_resource_sprite(resource_to_sprite_map[self.resource])
 		newPacket.rate *= self.HHH.total_speed_mult()
+		emit_signal("resource_spawned", self.resource)
 		#$Area2D/box_sprite.modulate = Color(0, 0, 1)
 
 func set_direction(new_direction):
@@ -121,3 +128,11 @@ func set_direction(new_direction):
 	self.rotation_degrees = fmod(new_direction * 90, 360)
 	$LabelNode.rotation_degrees = fmod(-1*new_direction * 90, 360)
 
+func connect_to_sound(sound):
+	self.connect("resource_delivered", sound, "on_correct_delivery")
+	self.connect("resource_misdelivered", sound, "on_bad_delivery")
+	self.connect("source_depleted", sound, "on_source_depleted")
+	self.connect("sink_satisfied", sound, "on_sink_satisfied")
+	self.connect("resource_spawned", sound, "on_resource_spawn")
+	self.connect("became_source", sound, "on_become_source")
+	self.connect("became_sink", sound, "on_become_sink")

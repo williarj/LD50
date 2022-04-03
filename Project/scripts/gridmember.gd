@@ -64,3 +64,6 @@ func get_path_from_cardinal(cardinal):
 		
 func receive_packet(p : packet):
 	pass
+	
+func connect_to_sound(sound):
+	pass

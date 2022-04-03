@@ -44,6 +44,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/packetpath.gd"
 }, {
+"base": "Node",
+"class": "settings_singleton",
+"language": "GDScript",
+"path": "res://scripts/settings_singleton.gd"
+}, {
+"base": "Node2D",
+"class": "sound_manager",
+"language": "GDScript",
+"path": "res://scenes/sound_manager.gd"
+}, {
 "base": "gridmember",
 "class": "source",
 "language": "GDScript",
@@ -62,6 +72,8 @@ _global_script_class_icons={
 "hectic": "",
 "packet": "",
 "packetpath": "",
+"settings_singleton": "",
+"sound_manager": "",
 "source": "",
 "square": ""
 }
@@ -71,6 +83,10 @@ _global_script_class_icons={
 config/name="LD50"
 run/main_scene="res://scenes/main_scene.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+SettingsSingleton="*res://scripts/settings_singleton.gd"
 
 [physics]
 
