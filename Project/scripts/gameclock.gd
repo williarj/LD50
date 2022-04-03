@@ -19,13 +19,19 @@ var gamegrid : grid
 
 var pausetime : float = 15.0 setget set_pausetime
 var userpaused : bool = false setget set_userpaused
+var gamepaused : bool = false setget set_gamepaused
+var ispaused : bool = false setget set_ispaused, get_ispaused
 
-var initial_spawn_lags = [0,2,2,2]
-var spawn_lag = 1
+var initial_spawn_lags = [4,3]
+var spawn_lag = 2
 var rng = RandomNumberGenerator.new()
+
+var settings_singleton : settings_singleton
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	settings_singleton = get_node("/root/SettingsSingleton")
+		
 	rng.randomize()
 	#global randomize
 	self.score = 0
@@ -50,6 +56,13 @@ func _ready():
 	
 	#timer.one_shot = true
 	self.gamegrid = $grid
+	self.gamegrid.spawn_by_resource(Globals.Resources.CIRCLE)
+	
+	if settings_singleton.tutorial_on:
+		$tutorial/SourceDialog.show()
+		$tutorial/SinkDialog.show()
+		$tutorial/ResourceDialogue.show()
+		self.gamepaused = true
 	self.HHH = self.gamegrid.HHH
 	
 	start_spawn_timer()
@@ -62,11 +75,12 @@ func _ready():
 	OS.set_window_position(screen_size*0.5 - window_size*0.5)
 
 func _process(delta):
-	if Input.is_key_pressed(KEY_SPACE) and pausetime > 0.0:
-		self.userpaused = true
-		self.pausetime -= delta
-	else:
-		self.userpaused = false
+	if !gamepaused:
+		if Input.is_key_pressed(KEY_SPACE) and pausetime > 0.0:
+			self.userpaused = true
+			self.pausetime -= delta
+		else:
+			self.userpaused = false
 
 func start_spawn_timer():
 	var wait_time 
@@ -95,15 +109,19 @@ func _on_grid_sink_spawned(spawned):
 func _on_grid_source_spawned(spawned):
 	spawned.connect("source_depleted", self, "on_source_depleted")
 
+var first_delivery = true
 func on_sink_resource_delivered(sink, type_delivered):
 	self.pausetime += 0.05
 	#increase points
 	self.score += 1
+	if (first_delivery and settings_singleton.tutorial_on):
+		$tutorial/ResourceTypesDialog.show()
+		first_delivery = false
+		self.gamepaused = true
 
 func on_sink_resource_misdelivered(sink, type_delivered, type_wanted):
 	#decrease points
 	self.score -= 1
-	pass
 
 func on_sink_satisfied(sink):
 	self.pausetime += 1
@@ -121,6 +139,10 @@ func set_score(new_val):
 	$score_num.text = str(score)
 
 func on_hectic_timeout():
+	if HHH.hectic_level == 0 and settings_singleton.tutorial_on:
+		$tutorial/HecticDialog.show()
+		self.gamepaused = true
+		
 	HHH.hectic_level += 1
 	var level = HHH.hectic_level
 	if rng.randf() < multiply_prob(0.2, level):
@@ -129,6 +151,8 @@ func on_hectic_timeout():
 		self.panic_mode(rng.randi_range(level, level*2))
 	if rng.randf() < multiply_prob(0.2, level):
 		self.HHH.perm_speed_mult *= (1.0 + rng.randf_range(0.05, 0.15))
+	if rng.randf() < multiply_prob(1.0/3.0, level):
+		get_tree().call_group("tiles", "increase_pollution_mult", 0.25)
 
 func panic_mode(seconds):
 	if panic_timer.is_stopped():
@@ -148,12 +172,22 @@ func set_pausetime(new_value):
 	val_label.text = "%0.2f" % pausetime
 
 func set_userpaused(new_value):
-	self.HHH.is_paused = new_value
-	if userpaused != new_value:
-		get_tree().set_group("pauseable_timers", "paused", new_value)
-		get_tree().set_group("packets", "paused", new_value)
 	userpaused = new_value
+	self.ispaused = gamepaused or userpaused
 
+func set_gamepaused(new_val):
+	gamepaused = new_val
+	self.ispaused = gamepaused or userpaused
+
+func set_ispaused(new_val):
+	self.HHH.is_paused = new_val
+	if self.ispaused != new_val:
+		get_tree().set_group("pauseable_timers", "paused", new_val)
+		get_tree().set_group("packets", "paused", new_val)
+	ispaused = new_val
+
+func get_ispaused():
+	return ispaused
 
 func _on_settings_node_close():
 	get_tree().change_scene("res://scenes/splash.tscn")
@@ -170,3 +204,18 @@ func _on_end_button_button_up():
 func _on_grid_all_sinks():
 	$game_over.visible = true
 	pass # Replace with function body.
+
+var first_pollution = true
+func on_polluted():
+	if first_pollution and settings_singleton.tutorial_on:
+		$tutorial/PollutionDialog.show()
+		first_pollution = false
+		self.gamepaused = true
+
+func _on_TutorialDialog_confirmed():
+	var waiting_dialogs = false
+	for d in $tutorial.get_children():
+		if d.visible:
+			waiting_dialogs = true
+	if !waiting_dialogs:
+		self.gamepaused = false

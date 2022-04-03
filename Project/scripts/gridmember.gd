@@ -2,6 +2,7 @@ extends Node2D
 class_name gridmember
 
 var neighbors : Array = []
+var n_neighbors = 0
 var parent_grid 
 
 var paths = []
@@ -26,6 +27,13 @@ func get_neighbor_by_cardinal(cardinal : int):
 func set_neighbors(neighbors : Array):
 	assert(len(neighbors) == 4, "need neighbors for exactly four direction")
 	self.neighbors = neighbors
+	self.n_neighbors = 0
+	for neighbor in neighbors:
+		if neighbor != null:
+			n_neighbors += 1
+
+func get_class():
+	return "gridmember"
 
 #instant change in direction
 func set_direction(new_direction):

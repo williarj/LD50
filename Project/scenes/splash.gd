@@ -76,3 +76,7 @@ func _on_close_credits_button_button_up():
 
 func _on_close_scores_button_button_up():
 	$scores_panel.visible = false
+
+
+func _on_tutorial_check_toggled(button_pressed):
+	settings_singleton.tutorial_on = button_pressed

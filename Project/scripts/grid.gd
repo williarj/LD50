@@ -199,6 +199,9 @@ func spawn_random_source(res):
 
 func spawn_random():
 	var res = choose_random_resource()
+	return spawn_by_resource(res)
+
+func spawn_by_resource(res):
 	var spawned = spawn_random_sink(res)
 	spawn_random_source(res)
 	return spawned

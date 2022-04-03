@@ -7,6 +7,7 @@ class_name settings_singleton
 var music_level = 4
 var level_to_load = null
 var sfx_on = true
+var tutorial_on = true
 
 var score_file = "user://scores.txt"
 var scores = []

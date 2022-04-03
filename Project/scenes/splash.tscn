@@ -112,6 +112,24 @@ margin_top = 216.0
 margin_right = 323.0
 margin_bottom = 236.0
 text = "Close "
+
+[node name="tutorial_check" type="CheckBox" parent="."]
+margin_left = 432.0
+margin_top = 352.0
+margin_right = 456.0
+margin_bottom = 376.0
+pressed = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="tutorial_check"]
+margin_left = 30.0
+margin_top = 6.0
+margin_right = 124.0
+margin_bottom = 20.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Enable Tutorial"
 [connection signal="button_up" from="credits_button" to="." method="_on_credits_button_button_up"]
 [connection signal="button_up" from="random_map_button" to="." method="_on_random_map_button_button_up"]
 [connection signal="button_up" from="set_map_button" to="." method="_on_set_map_button_button_up"]
@@ -121,3 +139,4 @@ text = "Close "
 [connection signal="mute_sfx" from="settings_node" to="." method="_on_settings_node_mute_sfx"]
 [connection signal="button_up" from="credits_panel/close_credits_button" to="." method="_on_close_credits_button_button_up"]
 [connection signal="button_up" from="scores_panel/close_scores_button" to="." method="_on_close_scores_button_button_up"]
+[connection signal="toggled" from="tutorial_check" to="." method="_on_tutorial_check_toggled"]
