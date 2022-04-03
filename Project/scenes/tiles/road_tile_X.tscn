@@ -11,32 +11,32 @@ extents = Vector2( 25, 25 )
 
 [sub_resource type="Curve2D" id=2]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 24, 48 )
+"points": PoolVector2Array( 0, 0, 0, 0, -1, -24, 0, 0, 0, 0, -1, 24 )
 }
 
 [sub_resource type="Curve2D" id=3]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, -24, 0, 0, 0, 0, 0, 24, 0 )
+"points": PoolVector2Array( 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, -24, 0 )
 }
 
 [sub_resource type="Curve2D" id=4]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 0, -24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0 )
+"points": PoolVector2Array( 0, 0, 0, 0, -1, -24, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 24, 0 )
 }
 
 [sub_resource type="Curve2D" id=5]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 0, -24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -24, 0 )
+"points": PoolVector2Array( 0, 0, 0, 0, -1, -24, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -24, 0 )
 }
 
 [sub_resource type="Curve2D" id=6]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24 )
+"points": PoolVector2Array( 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1, 24 )
 }
 
 [sub_resource type="Curve2D" id=7]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -24, 0 )
+"points": PoolVector2Array( 0, 0, 0, 0, -1, 24, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -24, 0 )
 }
 
 [node name="Box" type="Node2D"]
@@ -58,38 +58,37 @@ shape = SubResource( 1 )
 [node name="Paths" type="Node2D" parent="."]
 script = ExtResource( 5 )
 
-[node name="Path_NS" type="Path2D" parent="Paths"]
-position = Vector2( -24, -24 )
+[node name="PathNS" type="Path2D" parent="Paths"]
 curve = SubResource( 2 )
 script = ExtResource( 4 )
 side1 = 0
 side2 = 2
 
-[node name="Path_EW" type="Path2D" parent="Paths"]
+[node name="PathEW" type="Path2D" parent="Paths"]
 curve = SubResource( 3 )
 script = ExtResource( 4 )
 side1 = 1
 side2 = 3
 
-[node name="Path_NE" type="Path2D" parent="Paths"]
+[node name="PathNE" type="Path2D" parent="Paths"]
 curve = SubResource( 4 )
 script = ExtResource( 4 )
 side1 = 0
 side2 = 1
 
-[node name="Path_NW" type="Path2D" parent="Paths"]
+[node name="PathNW" type="Path2D" parent="Paths"]
 curve = SubResource( 5 )
 script = ExtResource( 4 )
 side1 = 0
 side2 = 3
 
-[node name="Path_ES" type="Path2D" parent="Paths"]
+[node name="PathES" type="Path2D" parent="Paths"]
 curve = SubResource( 6 )
 script = ExtResource( 4 )
 side1 = 1
 side2 = 2
 
-[node name="Path_SW" type="Path2D" parent="Paths"]
+[node name="PathSW" type="Path2D" parent="Paths"]
 curve = SubResource( 7 )
 script = ExtResource( 4 )
 side1 = 2

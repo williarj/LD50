@@ -3,6 +3,7 @@ class_name grid
 
 signal source_spawned(spawned)
 signal sink_spawned(spawned)
+signal no_boxes_available()
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -16,6 +17,13 @@ var HHH : hectic
 
 var boxScene = preload("res://scenes/Box.tscn")
 var ssScene = preload("res://scenes/SourceSink.tscn")
+
+var road_color_key = [Color("0026FF"),
+					Color("267F00"),
+					Color("FFD800"),
+					Color("FF6A00"),
+					Color("B200FF"),
+					Color("FF0000")]
 
 var road_scenes = [preload("res://scenes/tiles/road_tile_I.tscn"),
 				preload("res://scenes/tiles/road_tile_L.tscn"),
@@ -44,33 +52,8 @@ func _ready():
 	for w in rand_road_weights:
 		weight_sum += w
 	
-	####Generate all the boxes in the grid
-	var box_matrix = []
-	for i in range(grid_size+2):#+2 gives the border of source/sink cells
-		var box_row = []
-		for j in range(grid_size+2):
-			var new_box : gridmember
-			if (i == 0 or j == 0 or i > grid_size or j > grid_size):
-				new_box = ssScene.instance()
-				new_box.HHH = self.HHH
-				if i == 0:
-					new_box.direction = Globals.Cardinal.EAST
-				elif j == 0:
-					new_box.direction = Globals.Cardinal.SOUTH
-				elif i == grid_size+1:
-					new_box.direction = Globals.Cardinal.WEST
-				elif j == grid_size+1:
-					new_box.direction = Globals.Cardinal.NORTH
-			else:
-				new_box = pick_random_road().instance()
-			add_child(new_box)
-			new_box.parent_grid = self
-			new_box.set_position(Vector2(grid_border+i*box_size*(1+box_buffer), 
-										grid_border+j*box_size*(1+box_buffer)))
-			box_row.append(new_box)
-		box_matrix.append(box_row)
-	
-	self.box_matrix = box_matrix
+	#self.box_matrix = generate_random_grid()
+	self.box_matrix = generate_csv_grid("res://data/maps/map1.txt")
 	
 	####Set each box's neighbors
 	#"ss cells dont need checked"
@@ -107,6 +90,77 @@ func _ready():
 	#bg_sprite.scale = Vector2(last_node_pos.x/500, last_node_pos.y/300)
 			
 
+func generate_empty_grid():
+	var box_matrix = []
+	for i in range(grid_size+2):#+2 gives the border of source/sink cells
+		var box_row = []
+		for j in range(grid_size+2):
+			var new_box : gridmember
+			if (i == 0 or j == 0 or i > grid_size or j > grid_size):
+				new_box = ssScene.instance()
+				new_box.HHH = self.HHH
+				if i == 0:
+					new_box.direction = Globals.Cardinal.EAST
+				elif j == 0:
+					new_box.direction = Globals.Cardinal.SOUTH
+				elif i == grid_size+1:
+					new_box.direction = Globals.Cardinal.WEST
+				elif j == grid_size+1:
+					new_box.direction = Globals.Cardinal.NORTH
+				add_child(new_box)
+				new_box.parent_grid = self
+				new_box.set_position(Vector2(grid_border+i*box_size*(1+box_buffer), 
+											grid_border+j*box_size*(1+box_buffer)))
+			else:
+				new_box = null
+			box_row.append(new_box)
+		box_matrix.append(box_row)
+	return box_matrix
+
+func generate_random_grid():
+	####Generate all the boxes in the grid
+	var box_matrix = generate_empty_grid()
+	for i in range(1,grid_size+1):#skips the border cells, they were done already
+		var box_row = []
+		for j in range(1,grid_size+1):
+			var new_box : gridmember
+			new_box = pick_random_road().instance()
+			box_matrix[i][j] = new_box
+			add_child(new_box)
+			new_box.parent_grid = self
+			new_box.set_position(Vector2(grid_border+i*box_size*(1+box_buffer), 
+										grid_border+j*box_size*(1+box_buffer)))
+	return box_matrix
+
+func generate_csv_grid(csv_file):
+	var open_file = File.new()
+	open_file.open(csv_file, File.READ)
+	
+	var new_box_matrix = generate_empty_grid()
+	var i = 1
+	while !open_file.eof_reached():
+		var line = open_file.get_line()
+		#assert(i <= grid_size, "CSV with incompatible grid size loaded")
+		if i > grid_size:
+			continue
+		var sline = line.split(",")
+		var j = 1
+		for col in sline:
+			#assert(j <= grid_size, "CSV with incompatible grid size loaded")
+			if j > grid_size:
+				continue
+			var new_box = spawn_road_by_index(int(col)).instance()
+			new_box_matrix[j][i] = new_box #these indices are backwards, because of reasons
+			add_child(new_box)
+			new_box.parent_grid = self
+			new_box.set_position(Vector2(grid_border+j*box_size*(1+box_buffer), 
+										grid_border+i*box_size*(1+box_buffer)))
+			j += 1
+		i += 1
+	open_file.close()
+	return new_box_matrix
+	
+
 func activate_source(box, resource_type, amount = 10):
 	assert(resource_type in Globals.Resources.values(), "need valid resource type")
 	box.set_as_source( resource_type, amount)
@@ -127,6 +181,9 @@ func spawn_random_source():
 	#todo change resources
 	emit_signal("source_spawned", random_border)
 	return true
+
+func spawn_road_by_index(index):
+	return road_scenes[index]
 
 func spawn_random_sink():
 	var random_border = choose_random_empty_border()
@@ -164,6 +221,7 @@ func choose_random_empty_border():
 	#sample one from the list of boxes
 	if len(empty_boxes) == 0:
 		print("NO FREE BOXES")
+		emit_signal("no_boxes_available")
 		return null
 	return empty_boxes[rng.randi_range(0, len(empty_boxes)-1)]
 
