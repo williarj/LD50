@@ -12,6 +12,8 @@ var box_size = 50
 var box_buffer = 0.05 #percentage of box size
 var grid_border = 25
 var box_matrix
+var HHH : hectic
+
 var boxScene = preload("res://scenes/Box.tscn")
 var ssScene = preload("res://scenes/SourceSink.tscn")
 
@@ -34,6 +36,7 @@ func _ready():
 			var new_box : gridmember
 			if (i == 0 or j == 0 or i > grid_size or j > grid_size):
 				new_box = ssScene.instance()
+				new_box.HHH = self.HHH
 				if i == 0:
 					new_box.direction = Globals.Cardinal.EAST
 				elif j == 0:
@@ -144,6 +147,8 @@ func choose_random_empty_border():
 		return null
 	return empty_boxes[rng.randi_range(0, len(empty_boxes)-1)]
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func randomly_rotate(n_boxes):
+	pass
+
+func double_speed(seconds):
+	pass

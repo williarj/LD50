@@ -10,6 +10,7 @@ export var resource = Globals.Resources.CIRCLE
 
 var amount : int = 500 setget set_amount
 var spawn_rate : float = 3.0
+var HHH : hectic
 
 var is_source : bool = false
 var is_sink : bool = false
@@ -82,4 +83,5 @@ func _on_SpawnTimer_timeout():
 		var newPacket = packetScene.instance()
 		newPacket.set_path($Paths/Path2D)
 		newPacket.resource_type = self.resource
+		newPacket.rate *= self.HHH.total_speed_mult()
 		#$Area2D/box_sprite.modulate = Color(0, 0, 1)
