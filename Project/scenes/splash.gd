@@ -11,6 +11,11 @@ func _ready():
 	$settings_node/close_button.visible = false
 	$settings_node/mute_sfx_button.visible = false
 	settings_singleton = get_node("/root/SettingsSingleton")
+	#center window for sanity
+	var screen_size = OS.get_screen_size()
+	var window_size = OS.get_window_size()
+
+	OS.set_window_position(screen_size*0.5 - window_size*0.5)
 	pass # Replace with function body.
 
 
@@ -37,7 +42,12 @@ func _on_set_map_button_button_up():
 
 
 func _on_scores_button_button_up():
-	pass # Replace with function body.
+	var text = "TOP SCORES:\n"
+	var scores = settings_singleton.scores_to_str()
+	if (scores == ""):
+		scores = "no data yet..."
+	$scores_panel/RichTextLabel.text = text + scores
+	$scores_panel.visible = true
 
 
 func _on_settings_node_close():
@@ -62,4 +72,7 @@ func _on_settings_node_mute_sfx():
 
 func _on_close_credits_button_button_up():
 	$credits_panel.visible = false
-	pass # Replace with function body.
+
+
+func _on_close_scores_button_button_up():
+	$scores_panel.visible = false

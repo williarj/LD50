@@ -74,5 +74,5 @@ func _on_settings_node_lower_music():
 func _on_settings_node_mute_sfx():
 	settings_singleton.sfx_on = !settings_singleton.sfx_on
 	var music_bus = AudioServer.get_bus_index("sfx")
-	AudioServer.set_bus_mute(music_bus, settings_singleton.sfx_on)
+	AudioServer.set_bus_mute(music_bus, !settings_singleton.sfx_on)
 	

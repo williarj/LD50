@@ -28,7 +28,9 @@ var rng = RandomNumberGenerator.new()
 func _ready():
 	rng.randomize()
 	#global randomize
+	self.score = 0
 	randomize()
+	
 	
 	spawn_timer.connect("timeout", self, "on_spawn_timer")
 	spawn_timer.one_shot = true
@@ -79,6 +81,7 @@ func start_hectic_timer():
 	hectic_timer.wait_time = self.hectic_delay
 	hectic_timer.start()
 
+
 func on_spawn_timer():
 	#print("NEW SOURCE!")
 	self.gamegrid.spawn_random()
@@ -96,7 +99,6 @@ func on_sink_resource_delivered(sink, type_delivered):
 	self.pausetime += 0.05
 	#increase points
 	self.score += 1
-	pass
 
 func on_sink_resource_misdelivered(sink, type_delivered, type_wanted):
 	#decrease points
@@ -155,4 +157,16 @@ func set_userpaused(new_value):
 
 func _on_settings_node_close():
 	get_tree().change_scene("res://scenes/splash.tscn")
+	pass # Replace with function body.
+
+
+func _on_end_button_button_up():
+	var sing = (get_node("/root/SettingsSingleton") as settings_singleton)
+	sing.add_score(self.score, $game_over/Panel/TextEdit.text)
+	sing.save_scores()
+	_on_settings_node_close()
+
+
+func _on_grid_all_sinks():
+	$game_over.visible = true
 	pass # Replace with function body.

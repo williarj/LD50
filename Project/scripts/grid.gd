@@ -4,6 +4,7 @@ class_name grid
 signal source_spawned(spawned)
 signal sink_spawned(spawned)
 signal no_boxes_available()
+signal all_sinks()
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -217,28 +218,40 @@ func choose_random_resource():
 func choose_random_empty_border():
 	var empty_boxes = []
 	var source_script
+	var found_source = false
 	#checks left and right
 	for j in range(1, grid_size+1):
 		source_script = box_matrix[0][j] as source
 		if !(source_script.is_source or source_script.is_sink):
 			empty_boxes.append(source_script)
+		if (source_script.is_source):
+			found_source = true
 		source_script = box_matrix[grid_size+1][j]
 		if !(source_script.is_source or source_script.is_sink):
 			empty_boxes.append(source_script)
+		if (source_script.is_source):
+			found_source = true
+		
 	
 	#checks top and bottom
 	for i in range(1, grid_size+1):
 		source_script = box_matrix[i][0]
 		if !(source_script.is_source or source_script.is_sink):
 			empty_boxes.append(source_script)
+		if (source_script.is_source):
+			found_source = true
 		source_script = box_matrix[i][grid_size+1]
 		if !(source_script.is_source or source_script.is_sink):
 			empty_boxes.append(source_script)
+		if (source_script.is_source):
+			found_source = true
 			
 	#sample one from the list of boxes
 	if len(empty_boxes) == 0:
 		print("NO FREE BOXES")
 		emit_signal("no_boxes_available")
+		if (!found_source):
+			emit_signal("all_sinks")
 		return null
 	return empty_boxes[rng.randi_range(0, len(empty_boxes)-1)]
 
