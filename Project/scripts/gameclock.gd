@@ -139,9 +139,9 @@ func set_score(new_val):
 func on_hectic_timeout():
 	HHH.hectic_level += 1
 	var level = HHH.hectic_level
-	if rng.randf() < multiply_prob(0.5, level):
+	if rng.randf() < multiply_prob(0.2, level):
 		self.gamegrid.randomly_rotate(rng.randi_range(level, level*2))
-	if rng.randf() < multiply_prob(0.075, level):
+	if rng.randf() < multiply_prob(0.1, level):
 		self.panic_mode(rng.randi_range(level, level*2))
 	if rng.randf() < multiply_prob(0.2, level):
 		self.HHH.perm_speed_mult *= (1.0 + rng.randf_range(0.05, 0.15))

@@ -11,16 +11,10 @@ func _ready():
 	self.paths = $Paths.get_children()
 
 func _on_Area2D_rotate_left():
-	var original : int = self.direction
-	#self.rotation_degrees = fmod(self.A2D.rotation_degrees - 90, 360)
-	self.direction = (self.direction + 3) % 4
-	print("%d -> %d" % [original, self.direction])
+	self.rotate_left()
 
 func _on_Area2D_rotate_right():
-	var original : int = self.direction
-	#self.rotation_degrees = fmod(self.A2D.rotation_degrees + 90, 360)
-	self.direction = (self.direction + 1) % 4
-	print("%d -> %d" % [original, self.direction])
+	self.rotate_right()
 
 func set_pollution(new_val):
 	pollution = new_val
