@@ -17,6 +17,9 @@ var score : int = 0 setget set_score
 
 var gamegrid : grid
 
+var pausetime : float = 15.0 setget set_pausetime
+var userpaused : bool = false setget set_userpaused
+
 var source_lag_times = [1,1,2,2,5]
 var source_lag_after = 5
 var sink_lag_times = [1,1,2,2,2,2]
@@ -42,6 +45,12 @@ func _ready():
 	panic_timer.one_shot = true
 	add_child(panic_timer)
 	
+	#timer groups
+	source_timer.add_to_group("pauseable_timers",true)
+	sink_timer.add_to_group("pauseable_timers",true)
+	hectic_timer.add_to_group("pauseable_timers",true)
+	panic_timer.add_to_group("pauseable_timers",true)
+	
 	#timer.one_shot = true
 	self.gamegrid = $grid
 	self.gamegrid.spawn_random_source()
@@ -51,6 +60,13 @@ func _ready():
 	start_source_timer()
 	start_sink_timer()
 	start_hectic_timer()
+
+func _process(delta):
+	if Input.is_key_pressed(KEY_SPACE) and pausetime > 0.0:
+		self.userpaused = true
+		self.pausetime -= delta
+	else:
+		self.userpaused = false
 
 func start_source_timer():
 	var wait_time 
@@ -139,3 +155,13 @@ func on_panic_timeout():
 
 func multiply_prob(p, n):
 	return 1.0 - pow(1.0 - p, n)
+
+func set_pausetime(new_value):
+	pausetime = clamp(new_value, 0.0, 90.0)
+	var val_label : Label = $pause_time/value
+	val_label.text = "%0.2f" % pausetime
+
+func set_userpaused(new_value):
+	userpaused = new_value
+	self.HHH.is_paused = new_value
+	get_tree().set_group("pauseable_timers", "paused", new_value)
